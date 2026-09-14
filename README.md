@@ -39,7 +39,7 @@
 ### Установка зависимостей
 
 ```bash
-pip install -r requirements.txt
+pip install .
 ```
 
 ## Настройка
