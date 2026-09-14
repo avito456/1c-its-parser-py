@@ -9,6 +9,8 @@ import urllib.parse
 from typing import List, Optional
 from dotenv import load_dotenv
 import hashlib
+from loguru import logger
+from logging_setup import setup_logging
 
 IMG_TAG_PATTERN = r'<img[^>]*?src="([^"]+)"[^>]*?>'
 
@@ -56,8 +58,7 @@ def download_image(browser: WebDriver, img_element: WebElement, save_dir: str) -
             src = f"https://its.1c.ru{base_path}/{src}"
             
         # Загружаем изображение
-        if args.verbose:
-            print(f"Скачиваем изображение: {src}")
+        logger.debug("Скачиваем изображение: {src}", src=src)
             
         os.makedirs(save_dir, exist_ok=True)
         
@@ -92,22 +93,19 @@ def download_image(browser: WebDriver, img_element: WebElement, save_dir: str) -
         if response.status_code == 200:
             with open(save_path, 'wb') as f:
                 f.write(response.content)
-            if args.verbose:
-                print(f"Сохранено изображение: {save_path}")
+            logger.debug("Сохранено изображение: {path}", path=save_path)
             return new_filename
         else:
-            if args.verbose:
-                print(f"Ошибка при скачивании {src}: статус {response.status_code}")
-                print(f"Заголовки ответа: {response.headers}")
+            logger.debug("Ошибка скачивания {src}: статус {code}", src=src, code=response.status_code)
+            logger.debug("Заголовки ответа: {headers}", headers=dict(response.headers))
             
     except Exception as e:
-        if args.verbose:
-            print(f"Ошибка при скачивании изображения {src}: {str(e)}")
+        logger.error("Ошибка скачивания изображения {src}: {e}", src=src, e=e)
     return None
 
 def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
     """Извлекает структуру документации из оглавления"""
-    print("Извлекаем структуру документации...")
+    logger.info("Извлекаем структуру документации...")
     
     # Ждем загрузки дерева
     tree = WebDriverWait(browser, 15).until(
@@ -224,8 +222,8 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
         return document.querySelectorAll('.tree .collapsed').length;
     """)
     
-    if collapsed_nodes > 0 and args.verbose:
-        print(f"Внимание: после разворачивания остались свернутые узлы ({collapsed_nodes})")
+    if collapsed_nodes > 0:
+        logger.warning("После разворачивания остались свернутые узлы: {n}", n=collapsed_nodes)
         
         # Принудительно разворачиваем оставшиеся узлы через DOM-манипуляции
         browser.execute_script("""
@@ -254,8 +252,8 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
         collapsed_nodes = browser.execute_script("""
             return document.querySelectorAll('.tree .collapsed').length;
         """)
-        if collapsed_nodes > 0 and args.verbose:
-            print(f"Всё еще остались свернутые узлы: {collapsed_nodes}")
+        if collapsed_nodes > 0:
+            logger.warning("Всё ещё остались свернутые узлы: {n}", n=collapsed_nodes)
             
             # Если узлы все еще свернуты, используем глубокое преобразование HTML
             browser.execute_script("""
@@ -381,8 +379,8 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                 """)
                 
                 # Преобразуем результаты из JavaScript в объекты DocPage
-                if js_results and len(js_results) > 0 and args.verbose:
-                    print(f"JavaScript метод нашел {len(js_results)} ссылок")
+                if js_results:
+                    logger.debug("JavaScript метод нашёл {n} ссылок", n=len(js_results))
                     
                     # Обрабатываем каждую ссылку
                     item_index = [0] * 10  # Поддерживаем счетчики для каждого уровня (до 10 уровней глубины)
@@ -405,20 +403,16 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                                 page = DocPage(url, title, level, section_number)
                                 pages.append(page)
                                 processed_urls.add(url)
-                                if args.verbose:
-                                    print(f"Добавлена страница через JS: {page}")
+                                logger.debug("Добавлена страница через JS: {page}", page=page)
                         except Exception as e:
-                            if args.verbose:
-                                print(f"Ошибка при обработке JS результата: {str(e)}")
+                            logger.error("Ошибка при обработке JS результата: {e}", e=e)
             
             except Exception as e:
-                if args.verbose:
-                    print(f"Ошибка при JavaScript обходе дерева: {str(e)}")
+                logger.error("Ошибка при JavaScript обходе дерева: {e}", e=e)
             
             # Если JavaScript метод не дал результатов, используем стандартный метод
             if not pages:
-                if args.verbose:
-                    print("JavaScript метод не дал результатов, используем стандартный обход")
+                logger.debug("JavaScript метод не дал результатов, используем стандартный обход")
         
         # Стандартный обход дерева через Selenium
         items = ul_element.find_elements(By.CSS_SELECTOR, "li")
@@ -450,11 +444,9 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                         """, item)
                         
                         time.sleep(0.3)  # Даем время на разворачивание
-                        if args.verbose:
-                            print("Развернут элемент через JavaScript")
+                        logger.debug("Развернут элемент через JavaScript")
                     except Exception as e:
-                        if args.verbose:
-                            print(f"Не удалось развернуть элемент через JavaScript: {str(e)}")
+                        logger.warning("Не удалось развернуть элемент через JavaScript: {e}", e=e)
                         
                         # Запасной вариант - пробуем найти кнопку expand
                         try:
@@ -464,11 +456,9 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                                 browser.execute_script("arguments[0].scrollIntoView({behavior: 'auto', block: 'center'});", expand_buttons[0])
                                 expand_buttons[0].click()
                                 time.sleep(0.3)  # Даем время на разворачивание
-                                if args.verbose:
-                                    print("Развернут элемент через клик")
+                                logger.debug("Развернут элемент через клик")
                         except Exception as e2:
-                            if args.verbose:
-                                print(f"Не удалось развернуть элемент: {str(e2)}")
+                            logger.warning("Не удалось развернуть элемент: {e}", e=e2)
                 
                 # Проверяем, является ли элемент видимым
                 if not item.is_displayed():
@@ -489,8 +479,7 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                     url = link.get_attribute("href")
                     title = clean_title(link.text)
                 except Exception as e:
-                    if args.verbose:
-                        print("Пропущен элемент без ссылки или заголовка")
+                    logger.debug("Пропущен элемент без ссылки или заголовка")
                     continue
                 
                 if not url or not title or url in processed_urls:
@@ -502,8 +491,7 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                     page = DocPage(url, title, level, section_number)
                     pages.append(page)
                     processed_urls.add(url)
-                    if args.verbose:
-                        print(f"Добавлена страница: {page}")
+                    logger.debug("Добавлена страница: {page}", page=page)
                 
                 # Обрабатываем вложенные элементы
                 nested_lists = item.find_elements(By.CSS_SELECTOR, "ul")
@@ -516,8 +504,7 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                             process_list_items(nested_list, level + 1)
                             
             except Exception as e:
-                if args.verbose:
-                    print(f"Ошибка при обработке элемента: {str(e)}")
+                logger.error("Ошибка при обработке элемента: {e}", e=e)
                 continue
     
     # Начинаем обработку с корневого элемента
@@ -526,8 +513,7 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
     # Если стандартный обход дал мало результатов, попробуем JavaScript метод
     if len(pages) < 10:
         try:
-            if args.verbose:
-                print("Стандартный обход дал мало результатов, пробуем JavaScript метод")
+            logger.debug("Стандартный обход дал мало результатов, пробуем JavaScript метод")
                 
             # Запускаем JavaScript для извлечения всех ссылок независимо от структуры DOM
             js_results = browser.execute_script("""
@@ -602,8 +588,8 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                 return getAllLinksAndTexts();
             """)
             
-            if js_results and len(js_results) > 0 and args.verbose and len(pages) < len(js_results):
-                print(f"JavaScript извлек {len(js_results)} ссылок")
+            if js_results and len(js_results) > 0 and len(pages) < len(js_results):
+                logger.debug("JavaScript извлёк {n} ссылок", n=len(js_results))
             
             # Очищаем текущие страницы
             pages = []
@@ -630,8 +616,7 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
             # Текущий контекст уровней для определения правильной нумерации
             current_level_context = [-1] * (max_level + 1)
             
-            if args.verbose:
-                print(f"Обработка ссылок, найдено уровней от {min_level} до {max_level}")
+            logger.debug("Обработка ссылок, уровней от {min} до {max}", min=min_level, max=max_level)
             
             for item in js_results:
                 try:
@@ -670,32 +655,26 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                         pages.append(page)
                         processed_urls.add(url)
                         
-                        if args.verbose:
-                            debug_info = f"(исходные данные: level={item.get('originalLevel', 'N/A')}, " + \
-                                        f"ulCount={item.get('ulCount', 'N/A')}, " + \
-                                        f"paddingLevel={item.get('paddingLevel', 'N/A')})"
-                            print(f"Добавлена страница через JavaScript: {page} {debug_info}")
+                        debug_info = f"(исходные данные: level={item.get('originalLevel', 'N/A')}, " + \
+                                    f"ulCount={item.get('ulCount', 'N/A')}, " + \
+                                    f"paddingLevel={item.get('paddingLevel', 'N/A')})"
+                        logger.debug("Добавлена страница через JavaScript: {page} {info}", page=page, info=debug_info)
                 except Exception as e:
-                    if args.verbose:
-                        print(f"Ошибка при обработке JS результата: {str(e)}")
+                    logger.error("Ошибка при обработке JS результата: {e}", e=e)
         except Exception as e:
-            if args.verbose:
-                print(f"Ошибка при JavaScript извлечении ссылок: {str(e)}")
+            logger.error("Ошибка при JavaScript извлечении ссылок: {e}", e=e)
     
-    if args.verbose:
-        print("\nСтруктура документации:")
-        for page in pages:
-            print(f"{'  ' * page.level}{page.number} {page.title}")
+    logger.debug("Структура документации:")
+    for page in pages:
+        logger.debug("  {number} {title}", number=page.number, title=page.title)
     
     if not pages:
-        print("Внимание: не найдено ни одной страницы в дереве")
-        if args.verbose:
-            print("Содержимое дерева:")
-            print(tree.get_attribute('innerHTML'))
+        logger.warning("Не найдено ни одной страницы в дереве")
+        logger.debug("Содержимое дерева: {html}", html=tree.get_attribute('innerHTML'))
             
         # Крайний случай - используем любые ссылки со страницы
         try:
-            print("Пробуем получить хотя бы какие-то ссылки со страницы...")
+            logger.info("Пробуем получить ссылки напрямую со страницы...")
             all_links = browser.find_elements(By.TAG_NAME, "a")
             
             # Фильтруем только уникальные ссылки, относящиеся к документации
@@ -715,12 +694,11 @@ def extract_doc_structure(browser: WebDriver) -> List[DocPage]:
                     continue
                     
             if pages:
-                print(f"Удалось получить {len(pages)} ссылок напрямую со страницы")
+                logger.info("Удалось получить {n} ссылок напрямую со страницы", n=len(pages))
         except Exception as e:
-            if args.verbose:
-                print(f"Не удалось получить ссылки напрямую: {str(e)}")
+            logger.error("Не удалось получить ссылки напрямую: {e}", e=e)
     else:
-        print(f"Найдено {len(pages)} страниц")
+        logger.info("Найдено {n} страниц", n=len(pages))
     
     return pages
 
@@ -964,7 +942,7 @@ def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: in
     """Сохраняет все страницы документации"""
     if limit is not None:
         pages = pages[:limit]
-        print(f"Ограничение: будет сохранено {len(pages)} страниц")
+        logger.info("Ограничение: будет сохранено {n} страниц", n=len(pages))
     
     # Создаем оглавление в HTML
     toc_html = f"""<!DOCTYPE html>
@@ -1097,13 +1075,8 @@ def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: in
     total = len(pages)
     for i, page in enumerate(pages, 1):
         try:
-            if args.verbose:
-                print(f"\nОбработка страницы {i}/{total}")
-                print(f"Заголовок: {page.title}")
-                print(f"Уровень: {page.level}")
-                print(f"URL: {page.url}")
-            else:
-                print(f"Обработка: {i}/{total} - {page.title}")
+            logger.info("Обработка: {i}/{total} — {title}", i=i, total=total, title=page.title)
+            logger.debug("  Level={level}, URL={url}", level=page.level, url=page.url)
             
             page_dir = os.path.join('out', f"page_{i:04d}")
             os.makedirs(page_dir, exist_ok=True)
@@ -1119,13 +1092,11 @@ def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: in
             
             # Упрощаем пути к изображениям
             if simplify_image_paths(page_dir):
-                if args.verbose:
-                    print(f"Упрощены пути к изображениям для страницы {page.title}")
+                logger.debug("Упрощены пути к изображениям: {title}", title=page.title)
             
         except Exception as e:
-            print(f"Ошибка при сохранении страницы {page.title}")
-            if args.verbose:
-                print(f"Детали: {str(e)}")
+            logger.error("Ошибка при сохранении страницы: {title}", title=page.title)
+            logger.exception("Детали ошибки сохранения страницы")
             continue
 
 def save_iframe_content(browser, iframe_id, output_dir='out'):
@@ -1134,47 +1105,41 @@ def save_iframe_content(browser, iframe_id, output_dir='out'):
         WebDriverWait(browser, 15).until(
             EC.frame_to_be_available_and_switch_to_it((By.ID, iframe_id))
         )
-        if args.verbose:
-            print("Переключились в iframe")
+        logger.debug("Переключились в iframe")
         
         try:
             WebDriverWait(browser, 15).until(
                 lambda x: x.execute_script("return document.readyState") == "complete"
             )
-            if args.verbose:
-                print("readyState iframe complete")
+            logger.debug("readyState iframe complete")
             
             images_dir = os.path.join(output_dir, 'images')
             os.makedirs(images_dir, exist_ok=True)
             
             images = browser.find_elements(By.TAG_NAME, "img")
-            if args.verbose:
-                print(f"Найдено изображений: {len(images)}")
+            logger.debug("Найдено изображений: {n}", n=len(images))
             
             # Словарь для отслеживания уже скачанных изображений
             processed_images = {}
             
             for img in images:
                 src = img.get_attribute('src')
-                if args.verbose:
-                    print(f"Обрабатываем изображение: {src}")
+                logger.debug("Обрабатываем изображение: {src}", src=src)
                 
                 # Если такой URL уже обрабатывался, используем существующий путь
                 if src in processed_images:
                     new_src = processed_images[src]
                     img_path = f"images/{new_src}"
-                    if args.verbose:
-                        print(f"Используем существующий путь: {img_path}")
+                    logger.debug("Используем существующий путь: {path}", path=img_path)
                 else:
                     # Загружаем новое изображение
                     new_src = download_image(browser, img, images_dir)
                     if new_src:
                         img_path = f"images/{new_src}"
                         processed_images[src] = new_src
-                        if args.verbose:
-                            print(f"Обновляем путь на: {img_path}")
-                    elif args.verbose:
-                        print(f"Не удалось скачать изображение: {src}")
+                        logger.debug("Обновляем путь на: {path}", path=img_path)
+                    else:
+                        logger.warning("Не удалось скачать изображение: {src}", src=src)
                         continue
                 
                 # Обновляем путь в HTML
@@ -1247,39 +1212,33 @@ def save_iframe_content(browser, iframe_id, output_dir='out'):
             output_file = os.path.join(output_dir, 'page.html')
             with open(output_file, 'w', encoding='utf-8') as f:
                 f.write(iframe_content)
-            if args.verbose:
-                print(f"Содержимое iframe сохранено в {output_file}")
+            logger.debug("Содержимое iframe сохранено в {file}", file=output_file)
                 
             # Выполняем постобработку HTML для исправления путей к изображениям
             if post_process_html(output_file):
-                if args.verbose:
-                    print(f"Выполнена постобработка HTML для {output_file}")
+                logger.debug("Постобработка HTML для {file}", file=output_file)
             
         finally:
             browser.switch_to.default_content()
-            if args.verbose:
-                print("Вернулись к основному документу")
+            logger.debug("Вернулись к основному документу")
             
     except TimeoutException as e:
-        print("Ошибка: таймаут при ожидании iframe")
-        if args.verbose:
-            print(f"Детали: {str(e)}")
+        logger.error("Таймаут при ожидании iframe")
+        logger.exception("Детали таймаута iframe")
         raise
     except NoSuchFrameException as e:
-        print("Ошибка: не удалось переключиться на iframe")
-        if args.verbose:
-            print(f"Детали: {str(e)}")
+        logger.error("Не удалось переключиться на iframe")
+        logger.exception("Детали ошибки переключения iframe")
         raise
     except Exception as e:
-        print("Ошибка при обработке iframe")
-        if args.verbose:
-            print(f"Детали: {str(e)}")
+        logger.error("Ошибка при обработке iframe")
+        logger.exception("Детали обработки iframe")
         raise
 
 def clean_output_directory(directory='out'):
     """Очищает каталог вывода, если он существует"""
     if os.path.exists(directory):
-        print(f"Очистка каталога {directory}")
+        logger.info("Очистка каталога {dir}", dir=directory)
         shutil.rmtree(directory)
     os.makedirs(directory, exist_ok=True)
 
@@ -1343,8 +1302,7 @@ def post_process_html(html_file_path):
             
         return True
     except Exception as e:
-        if not args.headless:
-            print(f"Ошибка при постобработке HTML: {str(e)}")
+        logger.error("Ошибка при постобработке HTML: {e}", e=e)
         return False
 
 def clean_img_tags(html_content):
@@ -1430,8 +1388,7 @@ def simplify_image_paths(page_dir):
                     # Сохраняем соответствие путей
                     path_mapping[rel_path] = new_filename
                     
-                    if args.verbose:
-                        print(f"Скопирован файл {rel_path} -> {new_filename}")
+                    logger.debug("Скопирован файл {src} -> {dst}", src=rel_path, dst=new_filename)
                     
                     image_counter += 1
         
@@ -1479,18 +1436,14 @@ def simplify_image_paths(page_dir):
             with open(html_file, 'w', encoding='utf-8') as f:
                 f.write(content)
                 
-            if args.verbose:
-                print(f"Обновлен HTML-файл {html_file}")
+            logger.debug("Обновлён HTML-файл {file}", file=html_file)
                 
         return True
     except Exception as e:
-        if args.verbose:
-            print(f"Ошибка при упрощении путей к изображениям: {str(e)}")
+        logger.error("Ошибка при упрощении путей к изображениям: {e}", e=e)
         return False
 
 def main():
-    global args  # Перемещаем объявление в начало функции
-    
     parser = argparse.ArgumentParser(
         description="""
 Парсер документации 1С ИТС - инструмент для локального сохранения документации.
@@ -1506,7 +1459,7 @@ def main():
     python main.py --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/login --limit 20 --headless
   
   С расширенным выводом для отладки:
-    python main.py --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/login --verbose
+    python main.py --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/login --log-level DEBUG
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -1516,8 +1469,21 @@ def main():
     parser.add_argument('--password', required=False, help='Пароль пользователя (если не указано, берется из .env файла)')
     parser.add_argument('--limit', type=int, help='Ограничение количества страниц для загрузки (по умолчанию - все страницы)')
     parser.add_argument('--headless', action='store_true', help='Запуск браузера в фоновом режиме без отображения окна')
-    parser.add_argument('--verbose', action='store_true', help='Включить расширенный вывод для отладки')
+    parser.add_argument('--log-level', default=os.environ.get('LOG_LEVEL', 'INFO'),
+                        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
+                        help='Уровень логирования в stdout (по умолчанию: INFO)')
+    parser.add_argument('--log-file', default=os.environ.get('LOG_FILE'),
+                        help='Путь к файлу логов (если указан, логирование в файл включается)')
+    parser.add_argument('--log-file-level', default=os.environ.get('LOG_FILE_LEVEL', 'DEBUG'),
+                        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
+                        help='Уровень логирования в файл (по умолчанию: DEBUG)')
     args = parser.parse_args()
+
+    setup_logging(
+        stdout_level=args.log_level,
+        log_file=args.log_file,
+        log_file_level=args.log_file_level,
+    )
 
     # Использование переменных окружения, если не указаны аргументы
     if not args.username:
@@ -1558,7 +1524,7 @@ def main():
     browser.maximize_window()
     
     try:
-        print("Авторизация...")
+        logger.info("Авторизация...")
         browser.get(args.login)
         
         username_input = WebDriverWait(browser, 10).until(
@@ -1574,25 +1540,23 @@ def main():
         
         time.sleep(2)
         
-        print("Загрузка документации...")
+        logger.info("Загрузка документации...")
         browser.get(args.url)
         time.sleep(2)
         
         pages = extract_doc_structure(browser)
         
         if args.limit:
-            print(f"Сохранение {args.limit} страниц...")
+            logger.info("Сохранение {n} страниц...", n=args.limit)
         else:
-            print("Сохранение всех страниц...")
+            logger.info("Сохранение всех страниц...")
         
         save_all_pages(browser, pages, args.limit)
-        print("Готово!")
+        logger.info("Готово!")
             
     except Exception as e:
-        print("Ошибка при выполнении")
-        if args.verbose:
-            print(f"Детали: {str(e)}")
-            print("URL в момент ошибки:", browser.current_url)
+        logger.error("Ошибка при выполнении")
+        logger.exception("Детали ошибки: {url}", url=browser.current_url)
     finally:
         browser.quit()
 
