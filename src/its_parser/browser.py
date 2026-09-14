@@ -35,7 +35,10 @@ def create_browser(headless: bool = False) -> webdriver.Chrome:
     options.add_experimental_option('prefs', prefs)
 
     browser = webdriver.Chrome(options=options)
-    browser.maximize_window()
+    if headless:
+        browser.set_window_size(1920, 1080)
+    else:
+        browser.maximize_window()
     return browser
 
 
