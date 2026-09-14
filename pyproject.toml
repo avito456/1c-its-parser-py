@@ -1,5 +1,9 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "1c-its-parser"
+name = "its-parser"
 version = "0.1.0"
 description = "Парсер документации 1С ИТС"
 requires-python = ">=3.9"
@@ -10,3 +14,9 @@ dependencies = [
     "urllib3>=1.26.0",
     "loguru>=0.7.0",
 ]
+
+[project.scripts]
+its-parser = "its_parser.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/its_parser"]
