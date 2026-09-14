@@ -1,9 +1,34 @@
-# Исключить директорию сохранения страниц
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.so
+
+# Environment
+.env
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project
 out/
 fixtures/
-
-# Исключить файл с переменными окружения
-.env
-
-# Исключить директорию с логами
 logs/
+
+# Packaging
+*.whl
+*.tar.gz
