@@ -1,0 +1,42 @@
+# Индекс и MCP-сервер в Docker. Документацию сначала нужно скачать на хосте:
+#   uv run its-parser --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/login
+# затем: docker compose up -d --build
+#
+# Локальный режим Qdrant блокирует каталог одним процессом, поэтому Qdrant — отдельный сервис.
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.20.0  # версия совпадает с qdrant-client из uv.lock
+    restart: unless-stopped
+    volumes:
+      - ./data/qdrant-server:/qdrant/storage
+    healthcheck:
+      # в образе нет curl: проверяем, что порт принимает соединения
+      test: ["CMD", "bash", "-c", ":> /dev/tcp/127.0.0.1/6333"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  its-mcp:
+    build: .
+    restart: on-failure:3
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    environment:
+      ITS_QDRANT_URL: http://qdrant:6333
+      # ITS_DENSE_MODEL: intfloat/multilingual-e5-large
+    volumes:
+      - ./out:/data/out:ro
+      - ./data/models:/data/models  # кэш моделей: не скачиваются при каждом старте
+    # публикуем только на localhost: у MCP-сервера нет аутентификации
+    ports:
+      - "127.0.0.1:8080:8080"
+    # сначала индексация (неизменённые страницы пропускаются), затем сервер
+    command: ["sh", "-c", "its-index --all && its-mcp --transport http --host 0.0.0.0 --port 8080"]
+    healthcheck:
+      # healthy становится только после индексации: порт открывается, когда стартует сервер
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8080), timeout=4).close()"]
+      interval: 15s
+      timeout: 5s
+      start_period: 600s
+      retries: 5

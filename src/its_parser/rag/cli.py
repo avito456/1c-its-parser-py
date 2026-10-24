@@ -7,6 +7,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import List, Optional
 
+from dotenv import load_dotenv
 from loguru import logger
 
 from its_parser.logging_setup import setup_logging
@@ -43,6 +44,7 @@ def run_index(dbs: List[str], settings: Settings, reindex: bool = False) -> None
 
 
 def index_main(argv: Optional[List[str]] = None) -> None:
+    load_dotenv()  # ITS_* из .env, если он есть
     parser = argparse.ArgumentParser(
         description="Индексация скачанной документации ИТС (out/<db>) в Qdrant для RAG/MCP",
     )

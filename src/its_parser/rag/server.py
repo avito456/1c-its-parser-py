@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
+from dotenv import load_dotenv
 from loguru import logger
 from qdrant_client import QdrantClient
 
@@ -246,6 +247,7 @@ def serve(settings: Settings, transport: str = "stdio", host: str = "127.0.0.1",
 
 
 def mcp_main(argv: Optional[List[str]] = None) -> None:
+    load_dotenv()  # ITS_* из .env, если он есть
     parser = argparse.ArgumentParser(description="MCP-сервер поиска по документации ИТС")
     parser.add_argument('--transport', choices=['stdio', 'http'], default='stdio',
                         help='stdio — для Claude Code, http — streamable-http (по умолчанию: stdio)')
