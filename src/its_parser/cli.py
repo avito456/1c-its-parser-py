@@ -21,7 +21,10 @@ def db_name_from_url(url: str) -> str:
     match = re.search(r'/db/([^/?#]+)', urllib.parse.urlparse(url).path)
     if not match:
         raise ValueError(f"Не удалось определить имя базы из URL (ожидается /db/<db>): {url}")
-    return match.group(1)
+    db = match.group(1)
+    if not re.fullmatch(r'[A-Za-z0-9_-]+', db):
+        raise ValueError(f"Недопустимое имя базы '{db}' в URL: {url}")
+    return db
 
 
 def main():
@@ -105,7 +108,7 @@ def crawl(args, db_dir: str) -> None:
     if not args.username or not args.password:
         raise ValueError("Необходимо указать username и password в аргументах или в файле .env")
 
-    clean_output_directory(db_dir)
+    clean_output_directory(db_dir, args.out_dir)
 
     browser = create_browser(headless=args.headless)
 

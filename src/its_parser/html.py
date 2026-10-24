@@ -580,7 +580,7 @@ def simplify_image_paths(page_dir):
         return False
 
 
-def generate_index_html(pages: List[DocPage], output_dir: str = "out") -> None:
+def generate_index_html(pages: List[DocPage], output_dir: str) -> None:
     """Сохраняет оглавление документации в файл index.html"""
     toc_html = build_toc_html(pages)
     os.makedirs(output_dir, exist_ok=True)

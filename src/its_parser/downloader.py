@@ -88,7 +88,7 @@ def download_image(browser: WebDriver, img_element: WebElement, save_dir: str) -
     return None
 
 
-def save_iframe_content(browser, iframe_id, output_dir='out'):
+def save_iframe_content(browser, iframe_id, output_dir):
     """Сохраняем содержимое iframe"""
     try:
         WebDriverWait(browser, 15).until(
@@ -268,8 +268,15 @@ def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: in
             logger.exception("Детали ошибки сохранения страницы")
 
 
-def clean_output_directory(directory='out'):
-    """Очищает каталог вывода (например, out/<db>), если он существует"""
+def clean_output_directory(directory, out_dir):
+    """Очищает каталог вывода (например, out/<db>), если он существует.
+
+    directory обязан быть строго внутри out_dir — иначе rmtree может снести лишнее.
+    """
+    real_root = os.path.realpath(out_dir)
+    real_target = os.path.realpath(directory)
+    if real_target == real_root or os.path.commonpath([real_root, real_target]) != real_root:
+        raise ValueError(f"Каталог {directory} должен находиться строго внутри {out_dir}")
     if os.path.exists(directory):
         logger.info("Очистка каталога {dir}", dir=directory)
         shutil.rmtree(directory)
