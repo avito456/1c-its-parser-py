@@ -91,14 +91,15 @@ uv run its-parser --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/
 uv run its-index --db edtdoc            # одна база (out/edtdoc)
 uv run its-index --all                  # все базы из out/
 uv run its-index --db edtdoc --reindex  # пересоздать коллекцию с нуля
-uv run its-index --prune                # удалить коллекции its_*, для которых нет каталога out/<db>
+uv run its-index --prune                # показать (dry-run) коллекции its_* без каталога out/<db>
+uv run its-index --prune --yes          # и удалить их
 
 uv run its-mcp                          # stdio (для Claude Code)
 uv run its-mcp --transport http --port 8080   # streamable-http: http://127.0.0.1:8080/mcp
 ```
 
 Повторный `its-index` пропускает неизменённые страницы. `its-index --all` предупреждает о
-«осиротевших» коллекциях (есть `its_<db>`, нет `out/<db>`), `--prune` их удаляет. Если базы
+«осиротевших» коллекциях (есть `its_<db>`, нет `out/<db>`), `--prune` показывает, что будет удалено (dry-run), а `--prune --yes` удаляет. Если базы
 `out/<db>` нет, команда завершается с ошибкой и подсказкой скачать её. После смены модели
 (`ITS_DENSE_MODEL`) нужен `--reindex`. В stdio-режиме stdout занят протоколом MCP,
 все логи идут в stderr.
@@ -132,7 +133,7 @@ claude mcp add its-docs -- uv run --directory /путь/к/1c-its-parser-py its-
 HTTP (сервер запущен отдельно, например в Docker):
 
 ```bash
-claude mcp add --transport http its-docs http://localhost:8080/mcp
+claude mcp add --transport http its-docs http://127.0.0.1:8080/mcp
 ```
 
 > **Предупреждение.** HTTP-endpoint MCP-сервера не защищён аутентификацией: любой, кто до него
@@ -149,7 +150,7 @@ claude mcp add --transport http its-docs http://localhost:8080/mcp
 uv run its-parser --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/login  # → out/edtdoc
 docker compose up -d --build
 docker compose ps          # its-mcp станет healthy после индексации
-claude mcp add --transport http its-docs http://localhost:8080/mcp
+claude mcp add --transport http its-docs http://127.0.0.1:8080/mcp
 docker compose down        # без -v: индекс и модели сохраняются на хосте
 ```
 
@@ -211,8 +212,15 @@ uv run pytest -m slow           # с реальными моделями (ска
 2. **Таймауты при загрузке** — для больших баз нужно время; ограничьте объём через `--limit`.
 3. **`Storage folder ... is already accessed by another instance`** — локальный Qdrant открыт
    другим процессом (`its-mcp`, `its-index`). Остановите его или используйте `ITS_QDRANT_URL` / `docker compose`.
-4. **`its-mcp` отвечает «База не проиндексирована»** — выполните `its-index --db <db>`.
-5. **Контейнер `its-mcp` перезапускается** — проверьте `docker compose logs its-mcp`: чаще всего в `./out`
+4. **Клиент с адресом `http://localhost:8080/mcp` получает «Server returned an error response»,
+   а `http://127.0.0.1:8080/mcp` работает** — на машине настроен системный HTTP-прокси
+   (macOS: «Настройки сети → Прокси»). Клиенты на `httpx` (в том числе `fastmcp.Client`) отправляют
+   запросы к `localhost` через этот прокси, а он не может достучаться до порта контейнера; до сервера запрос
+   не доходит (в логах `its-mcp` его нет). Используйте адрес `127.0.0.1` или добавьте
+   `NO_PROXY=localhost,127.0.0.1,::1` в окружение клиента. Docker публикует порт только на IPv4
+   `127.0.0.1`, адрес `[::1]` недоступен.
+5. **`its-mcp` отвечает «База не проиндексирована»** — выполните `its-index --db <db>`.
+6. **Контейнер `its-mcp` перезапускается** — проверьте `docker compose logs its-mcp`: чаще всего в `./out`
    нет скачанных баз (`its-index --all` завершается ошибкой).
-6. **Изображения не отображаются в документации ERP** — парсер учитывает специфику путей ERP; если проблема
+7. **Изображения не отображаются в документации ERP** — парсер учитывает специфику путей ERP; если проблема
    осталась, запустите без `--headless`, проверьте папку `images` страницы и консоль браузера (F12).

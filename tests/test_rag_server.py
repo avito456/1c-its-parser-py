@@ -68,7 +68,7 @@ def test_search_docs(env):
     assert top["breadcrumbs"] == ["Начало", "Установка, обновление"]
     assert top["title"] == "Системные требования"
     assert not top["fragment"].startswith("Раздел:")
-    assert top["cite"] == "Системные требования (1.2.1.1.) — https://its.1c.ru/db/edtdoc/content/39/hdoc"
+    assert top["cite"] == "Системные требования (1.2.1.1) — https://its.1c.ru/db/edtdoc/content/39/hdoc"
     old = call(env, "search_docs", query="Обзор возможностей плагины", db="edtdoc")
     assert all(h["cite"].endswith(h["url"]) for h in old)  # номера нет (metadata.txt) — без скобок
     assert len({h["page_id"] for h in hits}) == len(hits)

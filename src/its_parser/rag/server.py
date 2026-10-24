@@ -61,6 +61,7 @@ def _fragment(text: str) -> str:
 
 
 def _cite(title: str, number: str, url: str) -> str:
+    number = number.rstrip(".")  # в оглавлении номера идут с точкой: «1.1.1.1.»
     return f"{title} ({number}) — {url}" if number else f"{title} — {url}"
 
 

@@ -38,10 +38,11 @@ def find_orphans(client, settings: Settings) -> List[str]:
 
 
 def run_index(dbs: List[str], settings: Settings, reindex: bool = False,
-              prune: bool = False, warn_orphans: bool = False) -> None:
+              prune: bool = False, confirm: bool = False, warn_orphans: bool = False) -> None:
     """Индексирует перечисленные базы (эмбеддер и клиент создаются один раз).
 
-    prune удаляет осиротевшие коллекции, warn_orphans только предупреждает о них.
+    prune ищет осиротевшие коллекции: без confirm только показывает, что будет удалено
+    (dry-run), с confirm удаляет; warn_orphans только предупреждает о них.
     Клиент Qdrant закрывается на выходе: локальное хранилище открывает один процесс."""
     from its_parser.rag.store import FastEmbedder, make_client
 
@@ -56,12 +57,17 @@ def run_index(dbs: List[str], settings: Settings, reindex: bool = False,
                 index_db(db, settings, client, embedder, reindex=reindex)
         orphans = find_orphans(client, settings) if (prune or warn_orphans) else []
         for db in orphans:
-            if prune:
-                client.delete_collection(settings.collection_name(db))
-                logger.info("Удалена коллекция {c}: нет каталога {d}", c=settings.collection_name(db), d=settings.db_dir(db))
+            name = settings.collection_name(db)
+            if prune and confirm:
+                client.delete_collection(name)
+                logger.info("Удалена коллекция {c}: нет каталога {d}", c=name, d=settings.db_dir(db))
+            elif prune:
+                logger.warning("[dry-run] будет удалена коллекция {c}: нет каталога {d}", c=name, d=settings.db_dir(db))
             else:
-                logger.warning("Коллекция {c} осиротела: нет каталога {d} (its-index --prune удалит её)",
-                               c=settings.collection_name(db), d=settings.db_dir(db))
+                logger.warning("Коллекция {c} осиротела: нет каталога {d} (its-index --prune --yes удалит её)",
+                               c=name, d=settings.db_dir(db))
+        if prune and not confirm:
+            logger.info("Dry-run: найдено осиротевших коллекций: {n}. Для удаления добавьте --yes", n=len(orphans))
     finally:
         client.close()
 
@@ -76,7 +82,9 @@ def index_main(argv: Optional[List[str]] = None) -> None:
     group.add_argument('--all', action='store_true', help='Проиндексировать все базы из каталога вывода')
     parser.add_argument('--out-dir', help='Каталог с загруженными базами (по умолчанию ITS_OUT_DIR или out)')
     parser.add_argument('--prune', action='store_true',
-                        help='Удалить коллекции its_*, для которых нет каталога out/<db> (можно без --db/--all)')
+                        help='Найти коллекции its_*, для которых нет каталога out/<db> (можно без --db/--all); '
+                             'без --yes только показывает, что будет удалено')
+    parser.add_argument('--yes', action='store_true', help='Подтвердить удаление для --prune')
     parser.add_argument('--reindex', action='store_true', help='Пересоздать коллекцию с нуля')
     parser.add_argument('--log-level', default=os.environ.get('LOG_LEVEL', 'INFO'),
                         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'])
@@ -89,6 +97,8 @@ def index_main(argv: Optional[List[str]] = None) -> None:
 
     if not (args.db or args.all or args.prune):
         parser.error("укажите --db NAME, --all или --prune")
+    if args.yes and not args.prune:
+        parser.error("--yes используется только вместе с --prune")
 
     if args.all:
         dbs = discover_dbs(settings.out_dir)
@@ -108,7 +118,7 @@ def index_main(argv: Optional[List[str]] = None) -> None:
                 raise SystemExit(1)
 
     try:
-        run_index(dbs, settings, reindex=args.reindex, prune=args.prune, warn_orphans=args.all)
+        run_index(dbs, settings, reindex=args.reindex, prune=args.prune, confirm=args.yes, warn_orphans=args.all)
     except QdrantLockedError as e:
         logger.error("{e}", e=e)
         raise SystemExit(1)

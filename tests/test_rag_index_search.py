@@ -248,8 +248,21 @@ def test_cli_prune_removes_orphans_all_warns(settings, db_dir, client, monkeypat
     assert any("its_gone" in m and "осиротела" in m for m in messages)
     assert list_collections(client) == ["its_edtdoc", "its_gone"]
 
-    index_main(["--prune"])  # без --db/--all: только чистка
+    messages.clear()
+    sink = logger.add(lambda m: messages.append(str(m)), level="WARNING")
+    try:
+        index_main(["--prune"])  # dry-run: ничего не удаляет
+    finally:
+        logger.remove(sink)
+    assert any("[dry-run]" in m and "its_gone" in m for m in messages)
+    assert list_collections(client) == ["its_edtdoc", "its_gone"]
+
+    index_main(["--prune", "--yes"])  # без --db/--all: только чистка
     assert list_collections(client) == ["its_edtdoc"]
+
+    with pytest.raises(SystemExit) as exc:
+        index_main(["--db", "edtdoc", "--yes"])  # --yes без --prune
+    assert exc.value.code == 2
 
 
 def test_cli_requires_target(settings, client, monkeypatch):
