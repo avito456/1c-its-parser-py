@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -18,7 +19,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchFrameException
 
 from its_parser.html import generate_index_html, post_process_html, simplify_image_paths
-from its_parser.models import DocPage
+from its_parser.models import DocPage, assign_breadcrumbs
 
 
 def download_image(browser: WebDriver, img_element: WebElement, save_dir: str) -> Optional[str]:
@@ -224,14 +225,17 @@ def save_iframe_content(browser, iframe_id, output_dir='out'):
         raise
 
 
-def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: int = None) -> None:
+def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: int = None,
+                   out_dir: str = 'out') -> None:
     """Сохраняет все страницы документации"""
     if limit is not None:
         pages = pages[:limit]
         logger.info("Ограничение: будет сохранено {n} страниц", n=len(pages))
 
+    assign_breadcrumbs(pages)
+
     # Создаем оглавление в HTML
-    generate_index_html(pages)
+    generate_index_html(pages, out_dir)
 
     # Сохраняем страницы
     total = len(pages)
@@ -240,13 +244,16 @@ def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: in
             logger.info("Обработка: {i}/{total} — {title}", i=i, total=total, title=page.title)
             logger.debug("  Level={level}, URL={url}", level=page.level, url=page.url)
 
-            page_dir = os.path.join('out', f"page_{i:04d}")
+            page_dir = os.path.join(out_dir, f"page_{i:04d}")
             os.makedirs(page_dir, exist_ok=True)
 
             with open(os.path.join(page_dir, 'metadata.txt'), 'w', encoding='utf-8') as f:
                 f.write(f"Title: {page.title}\n")
                 f.write(f"Level: {page.level}\n")
                 f.write(f"URL: {page.url}\n")
+
+            with open(os.path.join(page_dir, 'metadata.json'), 'w', encoding='utf-8') as f:
+                json.dump(page.to_dict(), f, ensure_ascii=False, indent=2)
 
             browser.get(page.url)
             time.sleep(3)
@@ -262,7 +269,7 @@ def save_all_pages(browser: webdriver.WebDriver, pages: List[DocPage], limit: in
 
 
 def clean_output_directory(directory='out'):
-    """Очищает каталог вывода, если он существует"""
+    """Очищает каталог вывода (например, out/<db>), если он существует"""
     if os.path.exists(directory):
         logger.info("Очистка каталога {dir}", dir=directory)
         shutil.rmtree(directory)
