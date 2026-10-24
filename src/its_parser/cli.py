@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import re
 import time
+from dataclasses import replace
+from pathlib import Path
 import urllib.parse
 
 from dotenv import load_dotenv
@@ -87,7 +89,12 @@ def main():
         crawl(args, db_dir)
 
     if args.index:
-        logger.warning("--index пока не реализован (этап C), пропускаем")
+        try:
+            from its_parser.rag.cli import run_index
+            from its_parser.rag.config import Settings
+        except ImportError as e:
+            raise SystemExit(f"Для --index нужен extra rag: uv sync --extra rag ({e})")
+        run_index([db], replace(Settings.from_env(), out_dir=Path(args.out_dir)))
     if args.serve:
         logger.warning("--serve пока не реализован (этап D), пропускаем")
     if args.no_crawl and not (args.index or args.serve):

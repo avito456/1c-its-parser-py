@@ -28,6 +28,7 @@ Thumbs.db
 out/
 /fixtures/
 logs/
+data/
 
 # Packaging
 *.whl
