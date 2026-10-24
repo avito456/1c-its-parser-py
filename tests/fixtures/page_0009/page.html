@@ -1,0 +1,1231 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru-ru" lang="ru-ru" class="  no-touchscreen" style="text-size-adjust: 100% !important; overflow: auto;"><head><meta charset="utf-8">
+
+<meta name="copyright" content="(C) Copyright 2026">
+<meta name="dc.rights.owner" content="(C) Copyright 2026">
+<meta name="generator" content="DITA-OT"><meta name="dc.type" content="topic">
+<meta name="dc.title" content="Системные требования">
+<meta name="dc.relation" scheme="URI" content="../topics/t000613.html">
+<meta name="dc.creator" content="ООО «1С-Софт» Селезневская ул., 21 Москва Россия телефон: +7 (495) 737-92-57 факс: +7 (495) 681-44-07 1c@1c.ru http://www.1c.ru http://www.v8.1c.ru http://users.v8.1c.ru">
+<meta name="dc.format" content="XHTML">
+<meta name="dc.identifier" content="i039">
+<meta name="dc.language" content="ru-RU">
+<style>/*
+ | This file is part of the DITA Open Toolkit project.
+ | See the accompanying LICENSE file for applicable license.
+*/
+/*
+ | (c) Copyright 2004, 2005 IBM Corporation
+ */
+.unresolved {
+  background-color: skyblue;
+}
+.noTemplate {
+  background-color: yellow;
+}
+.base {
+  background-color: #ffffff;
+}
+/* Add space for top level topics */
+.nested0 {
+  margin-top: 1em;
+}
+/* div with class=p is used for paragraphs that contain blocks, to keep the XHTML valid */
+.p {
+  margin-top: 1em;
+}
+/* Default of italics to set apart figure captions */
+.figcap {
+  font-style: italic;
+}
+.figdesc {
+  font-style: normal;
+}
+/* Use @frame to create frames on figures */
+.figborder {
+  border-style: solid;
+  padding-left: 3px;
+  border-width: 2px;
+  padding-right: 3px;
+  margin-top: 1em;
+  border-color: Silver;
+}
+.figsides {
+  border-left: 2px solid;
+  padding-left: 3px;
+  border-right: 2px solid;
+  padding-right: 3px;
+  margin-top: 1em;
+  border-color: Silver;
+}
+.figtop {
+  border-top: 2px solid;
+  margin-top: 1em;
+  border-color: Silver;
+}
+.figbottom {
+  border-bottom: 2px solid;
+  border-color: Silver;
+}
+.figtopbot {
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  margin-top: 1em;
+  border-color: Silver;
+}
+/* Most link groups are created with <div>. Ensure they have space before and after. */
+.ullinks {
+  list-style-type: none;
+}
+.ulchildlink {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.olchildlink {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.linklist {
+  margin-bottom: 1em;
+}
+ul.linklist {
+  margin-top: 0;
+  list-style-type: none;
+  padding-left: 0;
+}
+li.linklist {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.linklistwithchild {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+.sublinklist {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+.relconcepts {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.reltasks {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.relref {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.relinfo {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.breadcrumb {
+  font-size: smaller;
+  margin-bottom: 1em;
+}
+dt.prereq {
+  margin-left: 20px;
+}
+/* Set heading sizes, getting smaller for deeper nesting */
+.topictitle1 {
+  margin-top: 0;
+  margin-bottom: .1em;
+  font-size: 1.34em;
+}
+.topictitle2 {
+  margin-top: 1pc;
+  margin-bottom: .45em;
+  font-size: 1.17em;
+}
+.topictitle3 {
+  margin-top: 1pc;
+  margin-bottom: .17em;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.topictitle4 {
+  margin-top: .83em;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.topictitle5 {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.topictitle6 {
+  font-size: 1.17em;
+  font-style: italic;
+}
+.sectiontitle {
+  margin-top: 1em;
+  margin-bottom: 0;
+  color: black;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.section {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.example {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+div.tasklabel {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+h2.tasklabel,
+h3.tasklabel,
+h4.tasklabel,
+h5.tasklabel,
+h6.tasklabel {
+  font-size: 100%;
+}
+/* All note formats have the same default presentation */
+.note {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.notetitle {
+  font-weight: bold;
+}
+.notelisttitle {
+  font-weight: bold;
+}
+.tip {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.tiptitle {
+  font-weight: bold;
+}
+.fastpath {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.fastpathtitle {
+  font-weight: bold;
+}
+.important {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.importanttitle {
+  font-weight: bold;
+}
+.remember {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.remembertitle {
+  font-weight: bold;
+}
+.restriction {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.restrictiontitle {
+  font-weight: bold;
+}
+.attention {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.attentiontitle {
+  font-weight: bold;
+}
+.dangertitle {
+  font-weight: bold;
+}
+.danger {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.cautiontitle {
+  font-weight: bold;
+}
+.caution {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+.warning {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.warningtitle {
+  font-weight: bold;
+}
+.hazardstatement td,
+.hazardstatement th {
+  padding: 0.5rem;
+}
+.hazardstatement th {
+  text-align: center;
+  text-transform: uppercase;
+}
+.hazardstatement--caution {
+  background-color: #ffd100;
+}
+.hazardstatement--danger {
+  background-color: #c8102e;
+  color: #fff;
+}
+.hazardstatement--warning {
+  background-color: #ff8200;
+}
+.hazardstatement--attention, .hazardstatement--fastpath, .hazardstatement--important, .hazardstatement--note, .hazardstatement--notice, .hazardstatement--other, .hazardstatement--remember, .hazardstatement--restriction, .hazardstatement--tip {
+  background-color: #0072ce;
+  color: #fff;
+  font-style: italic;
+}
+/* Simple lists do not get a bullet */
+ul.simple {
+  list-style-type: none;
+}
+/* Used on the first column of a table, when rowheader="firstcol" is used */
+.firstcol {
+  font-weight: bold;
+}
+/* Various basic phrase styles */
+.bold {
+  font-weight: bold;
+}
+.boldItalic {
+  font-weight: bold;
+  font-style: italic;
+}
+.italic {
+  font-style: italic;
+}
+.underlined {
+  text-decoration: underline;
+}
+.uicontrol {
+  font-weight: bold;
+}
+.wintitle {
+  font-weight: bold;
+}
+.parmname {
+  font-weight: bold;
+}
+.kwd {
+  font-weight: bold;
+}
+.defkwd {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.var {
+  font-style: italic;
+}
+.shortcut {
+  text-decoration: underline;
+}
+.menucascade > abbr {
+    text-decoration: none;
+}
+/* Default of bold for definition list terms */
+.dlterm {
+  font-weight: bold;
+}
+/* Use CSS to expand lists with @compact="no" */
+.dltermexpand {
+  font-weight: bold;
+  margin-top: 1em;
+}
+*[compact="yes"] > li {
+  margin-top: 0;
+}
+*[compact="no"] > li {
+  margin-top: .53em;
+}
+.liexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.sliexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.dlexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.ddexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.stepexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.substepexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+/* Align images based on @align on topic/image */
+div.imageleft {
+  text-align: left;
+}
+div.imagecenter {
+  text-align: center;
+}
+div.imageright {
+  text-align: right;
+}
+div.imagejustify {
+  text-align: justify;
+}
+/* The cell border can be turned on with
+   {border-right:solid}
+   This value creates a very thick border in Firefox (does not match other tables)
+
+   Firefox works with 
+   {border-right:solid 1pt}
+   but this causes a barely visible line in IE */
+.cellrowborder {
+  border-left: none;
+  border-top: none;
+  border-right: solid 1px;
+  border-bottom: solid 1px;
+}
+.row-nocellborder {
+  border-left: none;
+  border-top: none;
+  border-right: hidden;
+  border-bottom: solid 1px;
+}
+.cell-norowborder {
+  border-top: none;
+  border-left: none;
+  border-bottom: hidden;
+  border-right: solid 1px;
+}
+.nocellnorowborder {
+  border: none;
+  border-right: hidden;
+  border-bottom: hidden;
+}
+pre.screen {
+  padding: 5px 5px 5px 5px;
+  border: outset;
+  background-color: #CCCCCC;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  white-space: pre;
+}
+span.filepath,
+samp.codeph,
+pre.codeblock {
+  font-family: monospace;
+}
+
+/* flagging styles */
+
+.flag__style--italics {
+  font-style: italic;
+}
+.flag__style--bold {
+  font-weight: bold;
+}
+.flag__style--underline {
+  text-decoration: underline;
+}
+.flag__style--double-underline {
+  text-decoration: double-underline;
+}
+.flag__style--overline {
+  text-decoration: overline;
+}
+</style>
+<style>body {
+	font-family: arial, helvetica, sans-serif;
+	/*  font-size: 0.85em; */
+}
+caption {
+	margin-block-end: 0.3em;
+}
+.familylinks {
+	margin-block-start: 1em;
+}
+table {
+	font-size: 1em;
+}
+.table td,
+.table th {
+	padding: .75rem;
+	vertical-align: top;
+	border-top: 1px solid #dee2e6;
+}
+a:link,
+a:visited {
+	color: #4a90e2;
+	text-decoration: none;
+}
+a:visited {
+	color: #0388a6;
+	text-decoration: none;
+}
+a:hover {
+	color: red;
+	text-decoration: none;
+}
+.dlterm {
+	margin-top: 1em;
+}
+pre {
+	white-space: pre;
+	font-family: monospace;
+	font-size: 1.1em;
+	line-height: 1.48;
+	background-color: #E8F2FE;
+	border-color: #D0D0D0;
+	padding: 0.5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	border-radius: 7px;
+	margin: .5em 0 .5em .5em;
+}
+code {
+	background-color: #E8F2FE;
+}
+
+code {
+	background-color: #E8F2FE;
+}
+
+.apiname {
+	padding: 1px 4px;
+	font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+	color: #d14;
+	white-space: nowrap;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	border-radius: 3px;
+}
+
+ /* Исправляет неправильное отображение картинок в примечаниях в 23 версии */
+ div.note > span.note__title {
+	font-weight: bold;
+	padding: 5px 5px 5px 30px;
+	display: inline-block;
+ }
+
+/* Заголовок примечания trouble */
+span.troubletitle {
+	font-weight: bold;
+}
+
+/* Примечания */
+div.note,
+div.tip,
+div.important,
+div.warning,
+div.fastpath,
+div.remember,
+div.trouble {
+	margin-left: 30px;
+	border-width: 2px;
+	padding: 5px;
+	border-radius: .5em;
+	background-color: #EEE;
+	background-color: #EEE;
+}
+
+div.example {
+	border-color: #02A762;
+	border-style: solid;
+	border-width: 1px;
+	padding: 5px;
+	border-radius: .5em;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+
+ /* Адаптация шаблона WebHelp with Feedback */
+ .wh_header,
+ .navbar,
+ .wh_publication_title > a,
+ .wh_content_area {
+	padding: 0 0;
+ }
+ .wh_search_input {
+	padding: 1em 0 1em 0;
+ }
+ .wh_tools {
+	margin: 1em 1em;
+ }
+ .wh_logo {
+	padding: 1em 1em 0 0;
+ }
+</style>
+<title>Системные требования :: 1C:Enterprise Development Tools Руководство разработчика</title>
+<meta name="robots" content="noarchive">
+<link href="https://its.1c.ru/db/content/edtdoc/src/topics/i039.html" rel="canonical">
+<link href="/css/its.content.css?_=1693585191" type="text/css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<style id="doc_style">.iss_sch_hl,mark,.iss_sch_hl.active,mark.active{background-color:transparent!important;padding:0}</style>
+<script type="text/javascript" src="/js/its.content.js?_=1697980666"></script>
+<script type="text/javascript">adjustContentLegacy()</script><style type="text/css">@media (any-pointer: coarse),(pointer: none){pre, code, kbd, p.Programtext{white-space:pre-wrap;word-wrap:break-word}h1, h2, h3, h4, h5, h6, p, li, table,p span, p font, p b, p strong, p i, p em,li span, li font, li b, li strong, li i, li em,table span, table font, table b, table strong, table i, table em,span.apiname{white-space:normal;word-wrap:break-word}body>div.index>a, body>div>div.index>a, ul.toc a,body>ul:not([class]) a:only-of-type[target="_top"],body>ul:not([class]) a:only-of-type[href^="/"],body>ul:not([class]) a:only-of-type[href^="#"]{display:inline-block;margin-top:10px;word-wrap:normal}}</style>
+<style id="scrollbar_style_initial" type="text/css">html::-webkit-scrollbar,body::-webkit-scrollbar{width:17px;height:17px}html::-webkit-scrollbar,body::-webkit-scrollbar,html::-webkit-scrollbar-track,body::-webkit-scrollbar-track,html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb{background-color:transparent}</style><style id="scroller_stylesheet_w_metadata_doc_frame" type="text/css" data-preserve-style="html{overflow-y:scroll}">html{overflow-y:scroll}</style></head>
+<body id="i039">
+<script type="text/javascript">onBodyAvailable()</script>
+
+	<h1 class="topictitle1" id="ariaid-title1">Системные требования</h1>
+
+	
+	<div>
+		<ul id="i039__ul_olx_fbn_cyb">
+			<li><a href="#i039__common">Общие требования</a></li>
+
+			<li><a href="#i039__profile">Отличия профилей работы</a></li>
+
+			<li><a href="#i039__minimum">Минимальный профиль</a></li>
+
+			<li><a href="#i039__normal">Рекомендуемый профиль</a></li>
+
+			<li><a href="#i039__advanced">Продвинутый профиль</a></li>
+
+			<li><a href="#i039__howto">Как узнать характеристики своей конфигурации</a></li>
+
+		</ul>
+
+		<p>Системные требования включают в себя <a href="#i039__common">общие требования</a> к программному обеспечению и <a href="#i039__profile">отдельные требования</a> к аппаратному обеспечению в зависимости от выбранного вами профиля работы.</p>
+
+		<div class="section" id="i039__common"><h2 class="sectiontitle">Общие требования к программному обеспечению</h2>
+			
+			<dl id="i039__dl_bsj_wbn_cyb">
+				
+					<dt class="dlterm"></dt>
+
+					<dd>
+						<dl id="i039__dl_qbx_wbn_cyb">
+							
+								<dt class="dlterm"> Платформа «1С:Предприятие»</dt>
+
+								<dd>Версии:<ul>
+						<li>8.5.1 (начиная с 8.5.1.1302);</li>
+
+						<li>8.3.27 (начиная с 8.3.27.2202);</li>
+
+						<li>8.3.26 (начиная с 8.3.26.1656);</li>
+
+						<li>8.3.25 (начиная с 8.3.25.1633);</li>
+
+						<li>8.3.24 (начиная с 8.3.24.1819);</li>
+
+						<li>8.3.23 (начиная с 8.3.23.2146);</li>
+
+						<li>8.3.22 (начиная с 8.3.22.2452);</li>
+
+						<li>8.3.21 (начиная с 8.3.21.1644);</li>
+
+						<li>8.3.20 (начиная с 8.3.20.2257);</li>
+
+						<li>8.3.19 (начиная с 8.3.19.1770);</li>
+
+						<li>8.3.18 (начиная с 8.3.18.1520);</li>
+
+						<li>8.3.17 (начиная с 8.3.17.1549);</li>
+
+						<li>8.3.16 (начиная с 8.3.16.1502);</li>
+
+						<li>8.3.15 (начиная с 8.3.15.1958);</li>
+
+						<li>от 8.3.11 до 8.3.14;</li>
+
+						<li>8.3.10 (начиная с 8.3.10.2428);</li>
+
+						<li>8.3.9 (начиная с 8.3.9.2016);</li>
+
+						<li>8.3.8.</li>
+
+					</ul>
+Рекомендуем использовать финальные версии платформы для стабильной работы.</dd>
+
+							
+							
+								<dt class="dlterm" id="i039__java-platform">Java Platform</dt>
+
+								<dd>64-разрядная Java Platform Standard Edition следующих версий:<ul>
+						<li>Для 1С:EDT <span class="uicontrol">2025.1.0</span> и следующих версий
+							предварительная установка Java не требуется. Нужная версия Java
+							установится автоматически при установке 1С:EDT.</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">2024.1.0 — 2024.2.6</span>:<ul>
+								<li><span class="uicontrol">Axiom 17 Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom17FullJDK" target="_blank">скачать с портала ИТС</a>)
+									или </li>
+
+								<li><span class="uicontrol">Azul Zulu: 17 JDK FX</span>(<a href="/db/edtdoc/content/76/hdoc/i076__установить-джава-17" target="_top">как скачать
+										рекомендуемый дистрибутив</a>).</li>
+
+							</ul>
+</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16 — 2023.3.6</span> — <span class="uicontrol">Axiom 11
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom11FullJDK" target="_blank">скачать с портала ИТС</a>).</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16</span> и предыдущих — <span class="uicontrol">Axiom 8
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom8FullJDK" target="_blank">скачать с портала ИТС</a>). </li>
+
+					</ul>
+<div class="important"><span class="importanttitle">Важно:</span> Между фирмами «1С» и «АКСИОМ» действует лицензионный
+						договор, который позволяет использовать программное обеспечение AxiomJDK,
+						распространять его, но только совместно с продуктами фирмы «1С».
+						Соответственно, и пользователи могут установить его только на тех
+						компьютерах где установлен продукт фирмы «1С». <div>Если JDK пользователю
+							необходим на этих компьютерах для других проектов, не связанных с
+							продуктами фирмы «1С», то необходимо приобрести для этих целей
+							соответствующую лицензию AxiomJDK.</div></div>
+</dd>
+
+							
+							
+								<dt class="dlterm">Операционная система</dt>
+
+								<dd>64-разрядная операционная система: Microsoft Windows 10 и выше, Ubuntu
+					18.04 LTS и выше, macOS 10.15 и выше.</dd>
+
+							
+						</dl>
+
+					</dd>
+
+				
+			</dl>
+
+		</div>
+
+		<div class="section" id="i039__profile"><h2 class="sectiontitle">Отличия профилей работы</h2>
+			
+			<p>Мы выделяем три профиля работы — <a href="#i039__minimum">минимальный</a>, <a href="#i039__normal">рекомендуемый</a> и <a href="#i039__advanced">продвинутый</a>) — в которых может использоваться 1C:EDT. Ключевые отличия требований, предъявляемых этими профилями, приведены в таблице.</p>
+
+			<table cellpadding="4" cellspacing="0" summary="" id="i039__simpletable_td3_jgs_kmb" border="1" class="simpletableborder"><colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup><thead><tr>
+					<th style="vertical-align:bottom;text-align:left;" id="d80328e313">&nbsp;</th>
+
+					<th style="vertical-align:bottom;text-align:left;" id="d80328e315">
+						<a href="#i039__minimum">Минимальный</a></th>
+
+					<th style="vertical-align:bottom;text-align:left;" id="d80328e321">
+						<a href="#i039__normal">Рекомендуемый</a></th>
+
+					<th style="vertical-align:bottom;text-align:left;" id="d80328e327">
+						<a href="#i039__advanced">Продвинутый</a></th>
+
+				</tr>
+</thead><tbody><tr>
+					<td style="vertical-align:top;" headers="d80328e313">Процессор</td>
+
+					<td style="vertical-align:top;" headers="d80328e315">Intel Core i3</td>
+
+					<td style="vertical-align:top;" headers="d80328e321">Intel Core i5</td>
+
+					<td style="vertical-align:top;" headers="d80328e327">Intel Core i7, AMD Ryzen</td>
+
+				</tr>
+<tr>
+					<td style="vertical-align:top;" headers="d80328e313">Оперативная память</td>
+
+					<td style="vertical-align:top;" headers="d80328e315">4 Гбайт</td>
+
+					<td style="vertical-align:top;" headers="d80328e321">8 Гбайт</td>
+
+					<td style="vertical-align:top;" headers="d80328e327">16 Гбайт</td>
+
+				</tr>
+<tr>
+					<td style="vertical-align:top;" headers="d80328e313">Жесткий диск</td>
+
+					<td style="vertical-align:top;" headers="d80328e315">HDD</td>
+
+					<td style="vertical-align:top;" headers="d80328e321">HDD / SSD</td>
+
+					<td style="vertical-align:top;" headers="d80328e327">SSD</td>
+
+				</tr>
+<tr>
+					<td style="vertical-align:top;" headers="d80328e313">Разрешение дисплея</td>
+
+					<td style="vertical-align:top;" headers="d80328e315">1280x768</td>
+
+					<td style="vertical-align:top;" headers="d80328e321">1920x1080</td>
+
+					<td style="vertical-align:top;" headers="d80328e327">1920x1080</td>
+
+				</tr>
+<tr>
+					<td style="vertical-align:top;" headers="d80328e313">Сложность приложения</td>
+
+					<td style="vertical-align:top;" headers="d80328e315">Средняя</td>
+
+					<td style="vertical-align:top;" headers="d80328e321">Высокая</td>
+
+					<td style="vertical-align:top;" headers="d80328e327">Максимальная</td>
+
+				</tr>
+</tbody></table>
+
+			<p>Далее следуют подробные описания требований, предъявляемых каждым профилем работы.</p>
+
+		</div>
+
+
+		<div class="section" id="i039__minimum"><h2 class="sectiontitle">Минимальный профиль работы</h2>
+			
+			<p>Этот профиль позволяет использовать полный спектр операций 1C:EDT при разработке конфигураций среднего уровня сложности:</p>
+
+			<ul compact="compact" id="i039__ul_ud3_jgs_kmb">
+				<li>6 300 объектов конфигурации,</li>
+
+				<li>2 700 форм,</li>
+
+				<li>5 800 модулей,</li>
+
+				<li>200 ролей.</li>
+
+			</ul>
+
+			<div class="tip"><span class="tiptitle">Совет:</span> <a href="#i039__howto">Как узнать характеристики своей конфигурации</a>.</div>
+
+			<dl id="i039__dl_gq4_dcn_cyb">
+				
+					<dt class="dlterm"></dt>
+
+					<dd>
+						<dl id="i039__dl_ftv_dcn_cyb">
+							
+								<dt class="dlterm">Операционная система</dt>
+
+								<dd>64-разрядная операционная система: Microsoft Windows 10 и выше, Ubuntu
+					18.04 LTS и выше, macOS 10.15 и выше.</dd>
+
+							
+							
+								<dt class="dlterm">Процессор</dt>
+
+								<dd>Intel Core i3 (не ниже поколения 2) и выше. Не рекомендуется использовать мобильные или ультрамобильные процессоры ниже Intel Core i5.</dd>
+
+							
+							
+								<dt class="dlterm">Оперативная память</dt>
+
+								<dd>4 Гбайт и больше.</dd>
+
+							
+							
+								<dt class="dlterm">Java Platform</dt>
+
+								<dd>64-разрядная Java Platform Standard Edition следующих версий:<ul>
+						<li>Для 1С:EDT <span class="uicontrol">2025.1.0</span> и следующих версий
+							предварительная установка Java не требуется. Нужная версия Java
+							установится автоматически при установке 1С:EDT.</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">2024.1.0 — 2024.2.6</span>:<ul>
+								<li><span class="uicontrol">Axiom 17 Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom17FullJDK" target="_blank">скачать с портала ИТС</a>)
+									или </li>
+
+								<li><span class="uicontrol">Azul Zulu: 17 JDK FX</span>(<a href="/db/edtdoc/content/76/hdoc/i076__установить-джава-17" target="_top">как скачать
+										рекомендуемый дистрибутив</a>).</li>
+
+							</ul>
+</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16 — 2023.3.6</span> — <span class="uicontrol">Axiom 11
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom11FullJDK" target="_blank">скачать с портала ИТС</a>).</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16</span> и предыдущих — <span class="uicontrol">Axiom 8
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom8FullJDK" target="_blank">скачать с портала ИТС</a>). </li>
+
+					</ul>
+<div class="important"><span class="importanttitle">Важно:</span> Между фирмами «1С» и «АКСИОМ» действует лицензионный
+						договор, который позволяет использовать программное обеспечение AxiomJDK,
+						распространять его, но только совместно с продуктами фирмы «1С».
+						Соответственно, и пользователи могут установить его только на тех
+						компьютерах где установлен продукт фирмы «1С». <div>Если JDK пользователю
+							необходим на этих компьютерах для других проектов, не связанных с
+							продуктами фирмы «1С», то необходимо приобрести для этих целей
+							соответствующую лицензию AxiomJDK.</div></div>
+</dd>
+
+							
+							
+								<dt class="dlterm">Платформа «1С:Предприятие»</dt>
+
+								<dd>Версии:<ul>
+						<li>8.5.1 (начиная с 8.5.1.1302);</li>
+
+						<li>8.3.27 (начиная с 8.3.27.2202);</li>
+
+						<li>8.3.26 (начиная с 8.3.26.1656);</li>
+
+						<li>8.3.25 (начиная с 8.3.25.1633);</li>
+
+						<li>8.3.24 (начиная с 8.3.24.1819);</li>
+
+						<li>8.3.23 (начиная с 8.3.23.2146);</li>
+
+						<li>8.3.22 (начиная с 8.3.22.2452);</li>
+
+						<li>8.3.21 (начиная с 8.3.21.1644);</li>
+
+						<li>8.3.20 (начиная с 8.3.20.2257);</li>
+
+						<li>8.3.19 (начиная с 8.3.19.1770);</li>
+
+						<li>8.3.18 (начиная с 8.3.18.1520);</li>
+
+						<li>8.3.17 (начиная с 8.3.17.1549);</li>
+
+						<li>8.3.16 (начиная с 8.3.16.1502);</li>
+
+						<li>8.3.15 (начиная с 8.3.15.1958);</li>
+
+						<li>от 8.3.11 до 8.3.14;</li>
+
+						<li>8.3.10 (начиная с 8.3.10.2428);</li>
+
+						<li>8.3.9 (начиная с 8.3.9.2016);</li>
+
+						<li>8.3.8.</li>
+
+					</ul>
+Рекомендуем использовать финальные версии платформы для стабильной работы.</dd>
+
+							
+							
+								<dt class="dlterm">Жесткий диск</dt>
+
+								<dd> HDD, при установке используется около 1200 Мбайт. Для хранения <a href="/db/edtdoc/content/10330/hdoc" target="_top">рабочих областей 1C:EDT</a> рекомендуется использовать SSD.</dd>
+
+							
+							
+								<dt class="dlterm">Дисплей</dt>
+
+								<dd>Разрешение от 1280х768 точек.</dd>
+
+							
+						</dl>
+
+					</dd>
+
+				
+			</dl>
+
+		</div>
+
+		<div class="section" id="i039__normal"><h2 class="sectiontitle">Рекомендуемый профиль работы</h2>
+			
+			<p>Этот профиль позволяет разрабатывать конфигурации любого уровня сложности. Рекомендуемый профиль обеспечивает достаточный уровень производительности для комфортной разработки конфигураций высокого уровня сложности:</p>
+
+			<ul compact="compact" id="i039__ul_vd3_jgs_kmb">
+				<li>8 200 объектов конфигурации,</li>
+
+				<li>4 000 форм,</li>
+
+				<li>8 800 модулей,</li>
+
+				<li>300 ролей.</li>
+
+			</ul>
+
+			<div class="tip" id="i039__note_trd_tky_pyb"><span class="tiptitle">Совет:</span> <a href="#i039__howto">Как узнать характеристики своей конфигурации</a>.</div>
+
+			<dl id="i039__dl_b3s_2cn_cyb">
+				
+					<dt class="dlterm"></dt>
+
+					<dd>
+						<dl id="i039__dl_or2_fcn_cyb">
+							
+								<dt class="dlterm">Операционная система</dt>
+
+								<dd>64-разрядная операционная система: Microsoft Windows 10 и выше, Ubuntu
+					18.04 LTS и выше, macOS 10.15 и выше.</dd>
+
+							
+							
+								<dt class="dlterm">Процессор</dt>
+
+								<dd> Intel Core i5 (не ниже поколения 2) и выше, 4 потока (без Hyper-Threading), и выше. Не рекомендуется использовать мобильные или ультрамобильные процессоры ниже Intel Core i7.</dd>
+
+							
+							
+								<dt class="dlterm">Оперативная память</dt>
+
+								<dd>8 Гбайт и больше. Рекомендуется выделить для 1C:EDT 6 Гбайт памяти.</dd>
+
+							
+							
+								<dt class="dlterm">Java Platform</dt>
+
+								<dd>64-разрядная Java Platform Standard Edition следующих версий:<ul>
+						<li>Для 1С:EDT <span class="uicontrol">2025.1.0</span> и следующих версий
+							предварительная установка Java не требуется. Нужная версия Java
+							установится автоматически при установке 1С:EDT.</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">2024.1.0 — 2024.2.6</span>:<ul>
+								<li><span class="uicontrol">Axiom 17 Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom17FullJDK" target="_blank">скачать с портала ИТС</a>)
+									или </li>
+
+								<li><span class="uicontrol">Azul Zulu: 17 JDK FX</span>(<a href="/db/edtdoc/content/76/hdoc/i076__установить-джава-17" target="_top">как скачать
+										рекомендуемый дистрибутив</a>).</li>
+
+							</ul>
+</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16 — 2023.3.6</span> — <span class="uicontrol">Axiom 11
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom11FullJDK" target="_blank">скачать с портала ИТС</a>).</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16</span> и предыдущих — <span class="uicontrol">Axiom 8
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom8FullJDK" target="_blank">скачать с портала ИТС</a>). </li>
+
+					</ul>
+<div class="important"><span class="importanttitle">Важно:</span> Между фирмами «1С» и «АКСИОМ» действует лицензионный
+						договор, который позволяет использовать программное обеспечение AxiomJDK,
+						распространять его, но только совместно с продуктами фирмы «1С».
+						Соответственно, и пользователи могут установить его только на тех
+						компьютерах где установлен продукт фирмы «1С». <div>Если JDK пользователю
+							необходим на этих компьютерах для других проектов, не связанных с
+							продуктами фирмы «1С», то необходимо приобрести для этих целей
+							соответствующую лицензию AxiomJDK.</div></div>
+</dd>
+
+							
+							
+								<dt class="dlterm">Платформа «1С:Предприятие»</dt>
+
+								<dd>Версии:<ul>
+						<li>8.5.1 (начиная с 8.5.1.1302);</li>
+
+						<li>8.3.27 (начиная с 8.3.27.2202);</li>
+
+						<li>8.3.26 (начиная с 8.3.26.1656);</li>
+
+						<li>8.3.25 (начиная с 8.3.25.1633);</li>
+
+						<li>8.3.24 (начиная с 8.3.24.1819);</li>
+
+						<li>8.3.23 (начиная с 8.3.23.2146);</li>
+
+						<li>8.3.22 (начиная с 8.3.22.2452);</li>
+
+						<li>8.3.21 (начиная с 8.3.21.1644);</li>
+
+						<li>8.3.20 (начиная с 8.3.20.2257);</li>
+
+						<li>8.3.19 (начиная с 8.3.19.1770);</li>
+
+						<li>8.3.18 (начиная с 8.3.18.1520);</li>
+
+						<li>8.3.17 (начиная с 8.3.17.1549);</li>
+
+						<li>8.3.16 (начиная с 8.3.16.1502);</li>
+
+						<li>8.3.15 (начиная с 8.3.15.1958);</li>
+
+						<li>от 8.3.11 до 8.3.14;</li>
+
+						<li>8.3.10 (начиная с 8.3.10.2428);</li>
+
+						<li>8.3.9 (начиная с 8.3.9.2016);</li>
+
+						<li>8.3.8.</li>
+
+					</ul>
+Рекомендуем использовать финальные версии платформы для стабильной работы.</dd>
+
+							
+							
+								<dt class="dlterm">Жесткий диск</dt>
+
+								<dd>Для установки 1C:EDT — HDD или SSD (при установке используется около 1200 Мбайт), для хранения <a href="/db/edtdoc/content/10330/hdoc" target="_top">рабочих областей 1C:EDT</a> — SSD.</dd>
+
+							
+							
+								<dt class="dlterm">Дисплей</dt>
+
+								<dd>Разрешение от 1920x1080 точек.</dd>
+
+							
+						</dl>
+
+					</dd>
+
+				
+			</dl>
+
+		</div>
+
+		<div class="section" id="i039__advanced"><h2 class="sectiontitle">Продвинутый профиль работы</h2>
+			
+			<p>Этот профиль позволяет разрабатывать конфигурации любого уровня сложности. Продвинутый профиль позволяет выполнять частые операции редактирования, отладки, сравнения и объединения конфигураций максимального уровня сложности:</p>
+
+			<ul compact="compact" id="i039__ul_wd3_jgs_kmb">
+				<li>12 500 объектов конфигурации,</li>
+
+				<li>6 300 форм,</li>
+
+				<li>13 800 модулей,</li>
+
+				<li>1 200 ролей.</li>
+
+			</ul>
+
+			<div class="tip" id="i039__note_xlj_tky_pyb"><span class="tiptitle">Совет:</span> <a href="#i039__howto">Как узнать характеристики своей конфигурации</a>.</div>
+
+			<dl id="i039__dl_ylv_fcn_cyb">
+				
+					<dt class="dlterm"></dt>
+
+					<dd>
+						<dl id="i039__dl_p5c_gcn_cyb">
+							
+								<dt class="dlterm">Операционная система</dt>
+
+								<dd>64-разрядная операционная система: Microsoft Windows 10 и выше, Ubuntu
+					18.04 LTS и выше, macOS 10.15 и выше.</dd>
+
+							
+							
+								<dt class="dlterm">Процессор</dt>
+
+								<dd> Intel Core i7 (не ниже поколения 3) и выше, 8 и более потоков (с Hyper-Threading), AMD Ryzen, 16 потоков (c Simultaneous Multithreading) и выше. Не рекомендуется использовать мобильные или ультрамобильные процессоры.</dd>
+
+							
+							
+								<dt class="dlterm">Оперативная память</dt>
+
+								<dd>16 Гбайт и больше. Рекомендуется выделить для 1C:EDT 10 Гбайт памяти, или больше.</dd>
+
+							
+							
+								<dt class="dlterm">Java Platform</dt>
+
+								<dd>64-разрядная Java Platform Standard Edition следующих версий:<ul>
+						<li>Для 1С:EDT <span class="uicontrol">2025.1.0</span> и следующих версий
+							предварительная установка Java не требуется. Нужная версия Java
+							установится автоматически при установке 1С:EDT.</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">2024.1.0 — 2024.2.6</span>:<ul>
+								<li><span class="uicontrol">Axiom 17 Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom17FullJDK" target="_blank">скачать с портала ИТС</a>)
+									или </li>
+
+								<li><span class="uicontrol">Azul Zulu: 17 JDK FX</span>(<a href="/db/edtdoc/content/76/hdoc/i076__установить-джава-17" target="_top">как скачать
+										рекомендуемый дистрибутив</a>).</li>
+
+							</ul>
+</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16 — 2023.3.6</span> — <span class="uicontrol">Axiom 11
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom11FullJDK" target="_blank">скачать с портала ИТС</a>).</li>
+
+						<li>Для 1С:EDT <span class="uicontrol">1.16</span> и предыдущих — <span class="uicontrol">Axiom 8
+								Full JDK</span> (<a href="https://releases.1c.ru/project/Axiom8FullJDK" target="_blank">скачать с портала ИТС</a>). </li>
+
+					</ul>
+<div class="important"><span class="importanttitle">Важно:</span> Между фирмами «1С» и «АКСИОМ» действует лицензионный
+						договор, который позволяет использовать программное обеспечение AxiomJDK,
+						распространять его, но только совместно с продуктами фирмы «1С».
+						Соответственно, и пользователи могут установить его только на тех
+						компьютерах где установлен продукт фирмы «1С». <div>Если JDK пользователю
+							необходим на этих компьютерах для других проектов, не связанных с
+							продуктами фирмы «1С», то необходимо приобрести для этих целей
+							соответствующую лицензию AxiomJDK.</div></div>
+</dd>
+
+							
+							
+								<dt class="dlterm">Платформа «1С:Предприятие»</dt>
+
+								<dd>Версии:<ul>
+						<li>8.5.1 (начиная с 8.5.1.1302);</li>
+
+						<li>8.3.27 (начиная с 8.3.27.2202);</li>
+
+						<li>8.3.26 (начиная с 8.3.26.1656);</li>
+
+						<li>8.3.25 (начиная с 8.3.25.1633);</li>
+
+						<li>8.3.24 (начиная с 8.3.24.1819);</li>
+
+						<li>8.3.23 (начиная с 8.3.23.2146);</li>
+
+						<li>8.3.22 (начиная с 8.3.22.2452);</li>
+
+						<li>8.3.21 (начиная с 8.3.21.1644);</li>
+
+						<li>8.3.20 (начиная с 8.3.20.2257);</li>
+
+						<li>8.3.19 (начиная с 8.3.19.1770);</li>
+
+						<li>8.3.18 (начиная с 8.3.18.1520);</li>
+
+						<li>8.3.17 (начиная с 8.3.17.1549);</li>
+
+						<li>8.3.16 (начиная с 8.3.16.1502);</li>
+
+						<li>8.3.15 (начиная с 8.3.15.1958);</li>
+
+						<li>от 8.3.11 до 8.3.14;</li>
+
+						<li>8.3.10 (начиная с 8.3.10.2428);</li>
+
+						<li>8.3.9 (начиная с 8.3.9.2016);</li>
+
+						<li>8.3.8.</li>
+
+					</ul>
+Рекомендуем использовать финальные версии платформы для стабильной работы.</dd>
+
+							
+							
+								<dt class="dlterm">Жесткий диск</dt>
+
+								<dd>Для установки 1C:EDT и для хранения <a href="/db/edtdoc/content/10330/hdoc" target="_top">рабочих областей</a> — SSD (при установке используется около 1200 Мбайт).</dd>
+
+							
+							
+								<dt class="dlterm">Дисплей</dt>
+
+								<dd>Разрешение от 1920x1080 точек.</dd>
+
+							
+						</dl>
+
+					</dd>
+
+				
+			</dl>
+
+		</div>
+
+		<div class="section" id="i039__howto"><h2 class="sectiontitle">Как узнать характеристики своей конфигурации</h2>
+			
+			<p>Чтобы понять, к какому уровню сложности относится ваша конфигурация, можно самостоятельно посчитать количество объектов, влияющих на производительность 1C:EDT. Для этого в конфигураторе «1С:Предприятия» выгрузите конфигурацию в файлы (<span class="menucascade"><span class="uicontrol">Конфигурация</span><abbr> &gt; </abbr><span class="uicontrol">Выгрузить конфигурацию в файлы ...</span></span>), а затем, например, с помощью <span class="uicontrol">Проводника Windows</span> посчитайте количество:</p>
+
+			<ul compact="compact" id="i039__ul_xd3_jgs_kmb">
+				<li>Объектов конфигурации (папки в корневых каталогах, кроме корневого каталога <span class="filepath">Ext</span>);</li>
+
+				<li>Форм (файлы <span class="filepath">Form.xml</span>);</li>
+
+				<li>Модулей (файлы <span class="filepath">*.bsl</span>);</li>
+
+				<li>Ролей (папки в каталоге <span class="filepath">Roles</span>).</li>
+
+			</ul>
+
+		</div>
+
+
+	</div>
+
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>На уровень выше:</strong> <a href="/db/edtdoc/content/10613/hdoc" target="_top">Руководство по установке</a></div>
+</div>
+</div>
+</body></html>

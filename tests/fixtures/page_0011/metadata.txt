@@ -1,0 +1,3 @@
+Title: Установка из командной строки
+Level: 5
+URL: https://its.1c.ru/db/edtdoc/content/10617/hdoc

@@ -1,0 +1,829 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru-ru" lang="ru-ru" class="  no-touchscreen" style="text-size-adjust: 100% !important; overflow: auto;"><head><meta charset="utf-8">
+
+<meta name="copyright" content="(C) Copyright 2026">
+<meta name="dc.rights.owner" content="(C) Copyright 2026">
+<meta name="generator" content="DITA-OT"><meta name="dc.type" content="topic">
+<meta name="dc.title" content="Обзор возможностей">
+<meta name="dc.relation" scheme="URI" content="../topics/i314.html">
+<meta name="dc.relation" scheme="URI" content="../topics/i024.html">
+<meta name="dc.relation" scheme="URI" content="../topics/i033.html">
+<meta name="dc.creator" content="ООО «1С-Софт» Селезневская ул., 21 Москва Россия телефон: +7 (495) 737-92-57 факс: +7 (495) 681-44-07 1c@1c.ru http://www.1c.ru http://www.v8.1c.ru http://users.v8.1c.ru">
+<meta name="dc.format" content="XHTML">
+<meta name="dc.identifier" content="i005">
+<meta name="dc.language" content="ru-RU">
+<style>/*
+ | This file is part of the DITA Open Toolkit project.
+ | See the accompanying LICENSE file for applicable license.
+*/
+/*
+ | (c) Copyright 2004, 2005 IBM Corporation
+ */
+.unresolved {
+  background-color: skyblue;
+}
+.noTemplate {
+  background-color: yellow;
+}
+.base {
+  background-color: #ffffff;
+}
+/* Add space for top level topics */
+.nested0 {
+  margin-top: 1em;
+}
+/* div with class=p is used for paragraphs that contain blocks, to keep the XHTML valid */
+.p {
+  margin-top: 1em;
+}
+/* Default of italics to set apart figure captions */
+.figcap {
+  font-style: italic;
+}
+.figdesc {
+  font-style: normal;
+}
+/* Use @frame to create frames on figures */
+.figborder {
+  border-style: solid;
+  padding-left: 3px;
+  border-width: 2px;
+  padding-right: 3px;
+  margin-top: 1em;
+  border-color: Silver;
+}
+.figsides {
+  border-left: 2px solid;
+  padding-left: 3px;
+  border-right: 2px solid;
+  padding-right: 3px;
+  margin-top: 1em;
+  border-color: Silver;
+}
+.figtop {
+  border-top: 2px solid;
+  margin-top: 1em;
+  border-color: Silver;
+}
+.figbottom {
+  border-bottom: 2px solid;
+  border-color: Silver;
+}
+.figtopbot {
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  margin-top: 1em;
+  border-color: Silver;
+}
+/* Most link groups are created with <div>. Ensure they have space before and after. */
+.ullinks {
+  list-style-type: none;
+}
+.ulchildlink {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.olchildlink {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.linklist {
+  margin-bottom: 1em;
+}
+ul.linklist {
+  margin-top: 0;
+  list-style-type: none;
+  padding-left: 0;
+}
+li.linklist {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.linklistwithchild {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+.sublinklist {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+.relconcepts {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.reltasks {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.relref {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.relinfo {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.breadcrumb {
+  font-size: smaller;
+  margin-bottom: 1em;
+}
+dt.prereq {
+  margin-left: 20px;
+}
+/* Set heading sizes, getting smaller for deeper nesting */
+.topictitle1 {
+  margin-top: 0;
+  margin-bottom: .1em;
+  font-size: 1.34em;
+}
+.topictitle2 {
+  margin-top: 1pc;
+  margin-bottom: .45em;
+  font-size: 1.17em;
+}
+.topictitle3 {
+  margin-top: 1pc;
+  margin-bottom: .17em;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.topictitle4 {
+  margin-top: .83em;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.topictitle5 {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.topictitle6 {
+  font-size: 1.17em;
+  font-style: italic;
+}
+.sectiontitle {
+  margin-top: 1em;
+  margin-bottom: 0;
+  color: black;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.section {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.example {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+div.tasklabel {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+h2.tasklabel,
+h3.tasklabel,
+h4.tasklabel,
+h5.tasklabel,
+h6.tasklabel {
+  font-size: 100%;
+}
+/* All note formats have the same default presentation */
+.note {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.notetitle {
+  font-weight: bold;
+}
+.notelisttitle {
+  font-weight: bold;
+}
+.tip {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.tiptitle {
+  font-weight: bold;
+}
+.fastpath {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.fastpathtitle {
+  font-weight: bold;
+}
+.important {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.importanttitle {
+  font-weight: bold;
+}
+.remember {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.remembertitle {
+  font-weight: bold;
+}
+.restriction {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.restrictiontitle {
+  font-weight: bold;
+}
+.attention {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.attentiontitle {
+  font-weight: bold;
+}
+.dangertitle {
+  font-weight: bold;
+}
+.danger {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.cautiontitle {
+  font-weight: bold;
+}
+.caution {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+.warning {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.warningtitle {
+  font-weight: bold;
+}
+.hazardstatement td,
+.hazardstatement th {
+  padding: 0.5rem;
+}
+.hazardstatement th {
+  text-align: center;
+  text-transform: uppercase;
+}
+.hazardstatement--caution {
+  background-color: #ffd100;
+}
+.hazardstatement--danger {
+  background-color: #c8102e;
+  color: #fff;
+}
+.hazardstatement--warning {
+  background-color: #ff8200;
+}
+.hazardstatement--attention, .hazardstatement--fastpath, .hazardstatement--important, .hazardstatement--note, .hazardstatement--notice, .hazardstatement--other, .hazardstatement--remember, .hazardstatement--restriction, .hazardstatement--tip {
+  background-color: #0072ce;
+  color: #fff;
+  font-style: italic;
+}
+/* Simple lists do not get a bullet */
+ul.simple {
+  list-style-type: none;
+}
+/* Used on the first column of a table, when rowheader="firstcol" is used */
+.firstcol {
+  font-weight: bold;
+}
+/* Various basic phrase styles */
+.bold {
+  font-weight: bold;
+}
+.boldItalic {
+  font-weight: bold;
+  font-style: italic;
+}
+.italic {
+  font-style: italic;
+}
+.underlined {
+  text-decoration: underline;
+}
+.uicontrol {
+  font-weight: bold;
+}
+.wintitle {
+  font-weight: bold;
+}
+.parmname {
+  font-weight: bold;
+}
+.kwd {
+  font-weight: bold;
+}
+.defkwd {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.var {
+  font-style: italic;
+}
+.shortcut {
+  text-decoration: underline;
+}
+.menucascade > abbr {
+    text-decoration: none;
+}
+/* Default of bold for definition list terms */
+.dlterm {
+  font-weight: bold;
+}
+/* Use CSS to expand lists with @compact="no" */
+.dltermexpand {
+  font-weight: bold;
+  margin-top: 1em;
+}
+*[compact="yes"] > li {
+  margin-top: 0;
+}
+*[compact="no"] > li {
+  margin-top: .53em;
+}
+.liexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.sliexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.dlexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.ddexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.stepexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.substepexpand {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+/* Align images based on @align on topic/image */
+div.imageleft {
+  text-align: left;
+}
+div.imagecenter {
+  text-align: center;
+}
+div.imageright {
+  text-align: right;
+}
+div.imagejustify {
+  text-align: justify;
+}
+/* The cell border can be turned on with
+   {border-right:solid}
+   This value creates a very thick border in Firefox (does not match other tables)
+
+   Firefox works with 
+   {border-right:solid 1pt}
+   but this causes a barely visible line in IE */
+.cellrowborder {
+  border-left: none;
+  border-top: none;
+  border-right: solid 1px;
+  border-bottom: solid 1px;
+}
+.row-nocellborder {
+  border-left: none;
+  border-top: none;
+  border-right: hidden;
+  border-bottom: solid 1px;
+}
+.cell-norowborder {
+  border-top: none;
+  border-left: none;
+  border-bottom: hidden;
+  border-right: solid 1px;
+}
+.nocellnorowborder {
+  border: none;
+  border-right: hidden;
+  border-bottom: hidden;
+}
+pre.screen {
+  padding: 5px 5px 5px 5px;
+  border: outset;
+  background-color: #CCCCCC;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  white-space: pre;
+}
+span.filepath,
+samp.codeph,
+pre.codeblock {
+  font-family: monospace;
+}
+
+/* flagging styles */
+
+.flag__style--italics {
+  font-style: italic;
+}
+.flag__style--bold {
+  font-weight: bold;
+}
+.flag__style--underline {
+  text-decoration: underline;
+}
+.flag__style--double-underline {
+  text-decoration: double-underline;
+}
+.flag__style--overline {
+  text-decoration: overline;
+}
+</style>
+<style>body {
+	font-family: arial, helvetica, sans-serif;
+	/*  font-size: 0.85em; */
+}
+caption {
+	margin-block-end: 0.3em;
+}
+.familylinks {
+	margin-block-start: 1em;
+}
+table {
+	font-size: 1em;
+}
+.table td,
+.table th {
+	padding: .75rem;
+	vertical-align: top;
+	border-top: 1px solid #dee2e6;
+}
+a:link,
+a:visited {
+	color: #4a90e2;
+	text-decoration: none;
+}
+a:visited {
+	color: #0388a6;
+	text-decoration: none;
+}
+a:hover {
+	color: red;
+	text-decoration: none;
+}
+.dlterm {
+	margin-top: 1em;
+}
+pre {
+	white-space: pre;
+	font-family: monospace;
+	font-size: 1.1em;
+	line-height: 1.48;
+	background-color: #E8F2FE;
+	border-color: #D0D0D0;
+	padding: 0.5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	border-radius: 7px;
+	margin: .5em 0 .5em .5em;
+}
+code {
+	background-color: #E8F2FE;
+}
+
+code {
+	background-color: #E8F2FE;
+}
+
+.apiname {
+	padding: 1px 4px;
+	font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+	color: #d14;
+	white-space: nowrap;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	border-radius: 3px;
+}
+
+ /* Исправляет неправильное отображение картинок в примечаниях в 23 версии */
+ div.note > span.note__title {
+	font-weight: bold;
+	padding: 5px 5px 5px 30px;
+	display: inline-block;
+ }
+
+/* Заголовок примечания trouble */
+span.troubletitle {
+	font-weight: bold;
+}
+
+/* Примечания */
+div.note,
+div.tip,
+div.important,
+div.warning,
+div.fastpath,
+div.remember,
+div.trouble {
+	margin-left: 30px;
+	border-width: 2px;
+	padding: 5px;
+	border-radius: .5em;
+	background-color: #EEE;
+	background-color: #EEE;
+}
+
+div.example {
+	border-color: #02A762;
+	border-style: solid;
+	border-width: 1px;
+	padding: 5px;
+	border-radius: .5em;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+
+ /* Адаптация шаблона WebHelp with Feedback */
+ .wh_header,
+ .navbar,
+ .wh_publication_title > a,
+ .wh_content_area {
+	padding: 0 0;
+ }
+ .wh_search_input {
+	padding: 1em 0 1em 0;
+ }
+ .wh_tools {
+	margin: 1em 1em;
+ }
+ .wh_logo {
+	padding: 1em 1em 0 0;
+ }
+</style>
+<title>Обзор возможностей :: 1C:Enterprise Development Tools Руководство разработчика</title>
+<meta name="robots" content="noarchive">
+<link href="https://its.1c.ru/db/content/edtdoc/src/topics/i005.html" rel="canonical">
+<link href="/css/its.content.css?_=1693585191" type="text/css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<style id="doc_style">.iss_sch_hl,mark,.iss_sch_hl.active,mark.active{background-color:transparent!important;padding:0}</style>
+<script type="text/javascript" src="/js/its.content.js?_=1697980666"></script>
+<script type="text/javascript">adjustContentLegacy()</script><style type="text/css">@media (any-pointer: coarse),(pointer: none){pre, code, kbd, p.Programtext{white-space:pre-wrap;word-wrap:break-word}h1, h2, h3, h4, h5, h6, p, li, table,p span, p font, p b, p strong, p i, p em,li span, li font, li b, li strong, li i, li em,table span, table font, table b, table strong, table i, table em,span.apiname{white-space:normal;word-wrap:break-word}body>div.index>a, body>div>div.index>a, ul.toc a,body>ul:not([class]) a:only-of-type[target="_top"],body>ul:not([class]) a:only-of-type[href^="/"],body>ul:not([class]) a:only-of-type[href^="#"]{display:inline-block;margin-top:10px;word-wrap:normal}}</style>
+<style id="scrollbar_style_initial" type="text/css">html::-webkit-scrollbar,body::-webkit-scrollbar{width:17px;height:17px}html::-webkit-scrollbar,body::-webkit-scrollbar,html::-webkit-scrollbar-track,body::-webkit-scrollbar-track,html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb{background-color:transparent}</style><style id="scroller_stylesheet_w_metadata_doc_frame" type="text/css" data-preserve-style="html{overflow-y:scroll}">html{overflow-y:scroll}</style></head>
+<body id="i005">
+<script type="text/javascript">onBodyAvailable()</script>
+
+	<h1 class="topictitle1" id="ariaid-title1">Обзор возможностей</h1>
+
+	
+	<div>
+		<ul id="i005__ul_pxy_wwm_cyb">
+			<li><a href="#i005__кроссплатформенность">Кроссплатформенность</a></li>
+
+			<li><a href="#i005__пользовательский-интерфейс">Пользовательский интерфейс</a></li>
+
+			<li><a href="#i005__помощь-в-кодировании">Помощь в кодировании</a></li>
+
+			<li><a href="#i005__конфигурации-запуска">Конфигурации запуска и отладки</a></li>
+
+			<li><a href="#i005__отладка">Отладка</a></li>
+
+			<li><a href="#i005__замер-производительности">Замер производительности</a></li>
+
+			<li><a href="#i005__управление-информационными-базами">Управление информационными базами</a></li>
+
+			<li><a href="#i005__управление-веб-серверами">Управление веб-серверами</a></li>
+
+			<li><a href="#i005__задачи">Задачи</a></li>
+
+			<li><a href="#i005__схемы-данных">Схемы данных</a></li>
+
+			<li><a href="#i005__инетграция-с-гит">Интеграция с Git</a></li>
+
+			<li><a href="#i005__интерфйс-командной-строки">Интерфейс командной строки</a></li>
+
+			<li><a href="#i005__плагины">Расширение с помощью плагинов</a></li>
+
+		</ul>
+
+		<p>1C:EDT это современная расширяемая среда разработки приложений. Она создана на основе свободной интегрированной среды разработки модульных кроссплатформенных приложений Eclipse, широко используемой разработчиками во всем мире.</p>
+
+		<p>1C:EDT поддерживает ключевые принципы создания приложений на платформе «1С:Предприятие». Содержит большое количество инструментов автоматизации разработки, делающих работу программиста более быстрой и комфортной, а также позволяет расширять функциональность инструментов разработки с помощью технологии плагинов.</p>
+
+		<div class="section" id="i005__кроссплатформенность"><h2 class="sectiontitle">Кроссплатформенность</h2>
+			
+			<p>1C:EDT позволяет вести разработку на всех операционных системах, которые поддерживает платформа «1С:Предприятие» — Windows, Linux и macOS.</p>
+
+			<p>В разделе <a href="/db/edtdoc/content/10384/hdoc" target="_top">Установка, обновление</a> есть рекомендации по выполнению типичных операций (<a href="/db/edtdoc/content/76/hdoc/i076__ustanovka-edt" target="_top">установка</a>, <a href="/db/edtdoc/content/10521/hdoc/t000521" target="_top">запуск</a>, <a href="/db/edtdoc/content/10385/hdoc" target="_top">удаление</a>) в разных операционных системах.</p>
+
+		</div>
+
+		<div class="section" id="i005__пользовательский-интерфейс"><h2 class="sectiontitle">Пользовательский интерфейс</h2>
+			
+			<p><a href="/db/edtdoc/content/24/hdoc" target="_top">Интерфейс 1C:EDT</a> состоит из однотипных панелей— инструментов разработчика, которые окружают редактор. Состав и расположение элементов можно <a href="/db/edtdoc/content/10009/hdoc" target="_top">настраивать</a> под свои потребности. </p>
+
+		</div>
+
+		<div class="section" id="i005__помощь-в-кодировании"><h2 class="sectiontitle">Помощь в кодировании</h2>
+			
+			<dl id="i005__dl_xbh_hyj_2xb">
+				
+					<dt class="dlterm"></dt>
+
+					<dd>
+						<dl id="i005__контекстная-подсказка">
+							
+								<dt class="dlterm">Контекстная подсказка <a href="#i005__контекстная-подсказка"><img src="img/image001.png" width="16" height="16" alt=""></a></dt>
+
+								<dd>
+									<p><a href="/db/edtdoc/content/323/hdoc" target="_top">Контекстная подсказка</a> помогает писать и редактировать текст программы. С ее помощью можно ускорить ввод текста, избежать ошибок и опечаток.</p>
+
+									<p>Контекстная подсказка не только предлагает вам вставить подходящий идентификатор, метод или свойство, но и показывает синтаксическую подсказку по тому элементу, который вы собираетесь использовать.</p>
+
+									<p>С помощью контекстной подсказки можно вставлять шаблоны комментариев к собственным процедурам и функциям. Оформленные таким образом комментарии синтаксическая подсказка будет предлагать вам так же, как она это делает для процедур и функций встроенного языка.</p>
+
+									<p>Обработчики событий также можно создавать с помощью контекстной подсказки, а можно и командой контекстного меню.</p>
+
+								</dd>
+
+							
+						</dl>
+
+						<dl id="i005__рефакторинг">
+							
+								<dt class="dlterm">Рефакторинг <a href="#i005__рефакторинг"><img src="img/image001.png" width="16" height="16" alt=""></a></dt>
+
+								<dd>
+									<p><a href="/db/edtdoc/content/249/hdoc" target="_top">Средства рефакторинга</a> помогают переименовывать переменные, извлекать локальные переменные и любые процедуры. </p>
+
+									<p>При выполнении рефакторинга используется полнотекстовый поиск. Можно просмотреть все планируемые изменения и сравнить тексты модулей «до» и «после» прямо тут же, с учетом семантики встроенного языка.</p>
+
+								</dd>
+
+							
+						</dl>
+
+						<dl id="i005__проверка-на-лету">
+							
+								<dt class="dlterm">Проверка конфигурации «на лету» <a href="#i005__проверка-на-лету"><img src="img/image001.png" width="16" height="16" alt=""></a></dt>
+
+								<dd>
+									<p><a href="/db/edtdoc/content/158/hdoc" target="_top">Проверка конфигурации</a> проверяет модули «на лету», прямо в процессе редактирования. Строки, содержащие ошибки и предупреждения, помечаются маркерами. Наведя курсор на маркер, можно прочитать описание проблемы.</p>
+
+									<p>Кликнув на маркер предупреждения или ошибки, можно автоматически исправить ошибку. Если у 1C:EDT есть варианты исправления, она вам их предложит.</p>
+
+								</dd>
+
+							
+						</dl>
+
+					</dd>
+
+				
+			</dl>
+
+		</div>
+
+		<div class="section" id="i005__конфигурации-запуска"><h2 class="sectiontitle">Конфигурации запуска и отладки</h2>
+			
+			<p>Можно использовать разные версии платформы «1С:Предприятие» и разные информационные базы для запуска и отладки проектов. Все необходимые параметры 1C:EDT сохраняет в <a href="/db/edtdoc/content/182/hdoc/i182__конфигурации-запуска" target="_top">конфигурациях запуска</a> и конфигурациях отладки. Вы просто запускаете одну из них.</p>
+
+			<p>Основными параметрами, необходимыми для запуска, являются:</p>
+
+			<div class="p">
+				<ul id="i005__ul_y3p_1sh_43b">
+					<li>Проект, который содержит конфигурацию приложения;</li>
+
+					<li>База, которая будет использована для работы этой конфигурации;</li>
+
+					<li>Клиентское приложение «1С:Предприятия», которое будет запущено.</li>
+
+				</ul>
+
+			</div>
+
+		</div>
+
+		<div class="section" id="i005__отладка"><h2 class="sectiontitle">Отладка</h2>
+			
+			
+			<p><a href="/db/edtdoc/content/308/hdoc" target="_top">В процессе отладки</a> можно использовать широкий набор возможностей, реализованных в разных инструментах 1C:EDT:</p>
+
+			<ul compact="compact" id="i005__ul_e1w_z4r_2xb">
+				<li>Прямо в тексте модуля можно видеть результаты <a href="/db/edtdoc/content/359/hdoc/i359__отображение-значений-переменных-в-модуле" target="_top">встроенной отладки</a> — значения локальных переменных модуля;</li>
+
+				<li>Подводя курсор к идентификаторам, можно видеть во <a href="/db/edtdoc/content/359/hdoc/i359__просмотр-значений-переменных" target="_top">всплывающий подсказке</a> их значения. Сложные значения показываются в виде дерева;</li>
+
+				<li>Просматривать значения можно как в панели <a href="/db/edtdoc/content/359/hdoc/i359__отслеживание-значений-переменных" target="_top"><span class="uicontrol">Переменные</span></a>, так и в панели <a href="/db/edtdoc/content/359/hdoc/i359__просмотр-коллекций-и-объектов-в-табличном-виде" target="_top"><span class="uicontrol">Значения</span></a>. Панель <span class="uicontrol">Значения</span> в удобном виде показывает содержимое коллекций;</li>
+
+				<li>Можно <a href="/db/edtdoc/content/359/hdoc/i359__изменение-значений-переменных-и-свойств" target="_top">изменять значения переменных</a> прямо во время отладки;</li>
+
+				<li>Точки останова можно <a href="/db/edtdoc/content/15/hdoc" target="_top">экспортировать и импортировать</a> — например, чтобы попросить коллегу исправить ошибки, возникающие по этим точкам;</li>
+
+				<li>Можно запускать приложения на удаленном компьютере для отладки, подключать отладку к уже работающему там приложению.</li>
+
+			</ul>
+
+		</div>
+
+		<div class="section" id="i005__замер-производительности"><h2 class="sectiontitle">Замер производительности</h2>
+			
+			<p><a href="/db/edtdoc/content/10353/hdoc" target="_top">Замер производительности</a> позволяет оценить скорость работы всего приложения или его части, работающей в рамках любого предмета отладки.</p>
+
+		</div>
+
+		<div class="section" id="i005__управление-информационными-базами"><h2 class="sectiontitle">Управление информационными базами</h2>
+			
+			<p><a href="/db/edtdoc/content/10612/hdoc" target="_top">Все операции с базами</a> можно выполнять внутри 1C:EDT. Она использует тот же самый список баз, который использует платформа «1С:Предприятия». Изменяя этот список в 1C:EDT, вы увидите эти же изменения при запуске клиентских приложений «1С:Предприятия».</p>
+
+			<p>1C:EDT, по сравнению с «1С:Предприятием», предоставляет ряд дополнительных возможностей. Например, быстрая <a href="/db/edtdoc/content/10325/hdoc/t000325__публикация-иб" target="_top">публикация конфигурации на веб-сервере</a> или <a href="/db/edtdoc/content/221/hdoc/i221__удалить-файловую-иб" target="_top">непосредственное удаление файловой базы</a> на диске.</p>
+
+		</div>
+
+		<div class="section" id="i005__управление-веб-серверами"><h2 class="sectiontitle">Управление веб-серверами</h2>
+			
+			<p>1C:EDT позволяет управлять всеми <a href="/db/edtdoc/content/116/hdoc" target="_top">веб-серверами</a>, которые могут понадобиться вам для запуска и отладки приложений. При запуске 1C:EDT автоматически находит все установленные на компьютере веб-серверы, а также все публикации, которые были осуществлены на них.</p>
+
+			<p>Можно не только управлять серверами, но и копировать публикации с одного сервера на другой. Если не все веб-серверы удалось обнаружить автоматически, можно <a href="/db/edtdoc/content/237/hdoc/i237__добавить" target="_top">добавить их в список вручную</a>.</p>
+
+			<dl id="i005__dl_hqm_2js_2xb">
+				
+					<dt class="dlterm"></dt>
+
+					<dd>
+						<dl id="i005__1слинк">
+							
+								<dt class="dlterm">Интеграция с сервисом 1С:Линк <a href="#i005__1слинк"><img src="img/image001.png" width="16" height="16" alt=""></a></dt>
+
+								<dd>
+									<p>1C:EDT интегрирована с сервисом <a href="https://1c.link/" target="_blank">1С:Линк</a>. Его можно использовать для публикации информационных баз и отладки их с помощью веб-клиента.</p>
+
+									<p>1C:EDT поддерживает этот веб-сервер на ОС Windows (без условий) и на ОС Linux при условии дополнительной самостоятельной установки веб-сервера Apache. </p>
+
+								</dd>
+
+							
+						</dl>
+
+					</dd>
+
+				
+			</dl>
+
+		</div>
+
+		<div class="section" id="i005__задачи"><h2 class="sectiontitle">Задачи</h2>
+			
+			<p><a href="/db/edtdoc/content/83/hdoc" target="_top">Задача</a> — это некоторый объем работы, который предстоит выполнить. С помощью задач можно планировать состав предстоящих работ. Создавая задачи, можно указать степень их важности.</p>
+
+			<p>Можно <a href="/db/edtdoc/content/83/hdoc/i083__добавить-задачу-связанную-с-модулем" target="_top">связывать задачи с конкретными строками модулей</a>. Таким образом вы не только оставляете себе напоминание о том, что необходимо сделать, но и можете <a href="/db/edtdoc/content/83/hdoc/i083__перейти-к-строке-модуля" target="_top">быстро перейти к тому месту</a>, в котором эти действия необходимо выполнить. </p>
+
+		</div>
+
+		<div class="section" id="i005__схемы-данных"><h2 class="sectiontitle">Схемы данных</h2>
+			
+			<p id="i005__ul_u53_1qr_2xb">Можно использовать <a href="/db/edtdoc/content/362/hdoc" target="_top">инструмент «Схема данных»</a> для анализа структуры бизнес-приложения в виде ER-диаграммы. ER-модель представляет структуру данных приложения в виде совокупности объектов конфигурации, обладающих реквизитами. Эти объекты взаимодействуют между собой при помощи связей.</p>
+
+		</div>
+
+		<div class="section" id="i005__инетграция-с-гит"><h2 class="sectiontitle">Интеграция с Git</h2>
+			
+			<p>1C:EDT стандартно поддерживает работу с <a href="/db/edtdoc/content/10159/hdoc" target="_top">системой контроля версий Git</a>. Можно подключаться к существующим репозиториям, создавать собственные. Благодаря этому можно версионировать и хранить копии только своих разработок, а можно работать над проектом командой.</p>
+
+		</div>
+
+		<div class="section" id="i005__интерфйс-командной-строки"><h2 class="sectiontitle">Интерфейс командной строки</h2>
+			
+			<p>Можно использовать <a href="/db/edtdoc/content/10608/hdoc" target="_top">интерфейс командной строки</a>. Он удобен для автоматизации процесса разработки: проверки проектов, конвертации в xml-выгрузку конфигурации и обратно, других рутинных операций. </p>
+
+		</div>
+
+		<div class="section" id="i005__плагины"><h2 class="sectiontitle">Расширение с помощью плагинов</h2>
+			
+			<p>Поскольку 1C:EDT разработана с использованием технологий Eclipse, можно расширять ее возможности <a href="/db/edtdoc/content/10052/hdoc" target="_top">с помощью плагинов</a>. Например, можно установить плагин, который позволит вам быстро подключаться к различным СУБД, смотреть структуру их данных, выполнять запросы.</p>
+
+			<p>Также можно <a href="/db/edtdoc/content/10052/hdoc/t000052__самостоятельная-разработка-плагинов" target="_top">создавать собственные плагины</a>, чтобы добавить в 1C:EDT новую функциональность.</p>
+
+			<p>В стандартную поставку 1C:EDT уже <a href="/db/edtdoc/content/10052/hdoc/t000052__поставляемые-плагины" target="_top">включены три плагина</a>, которые разрабатываются сообществом под открытой лицензией.</p>
+
+		</div>
+
+	</div>
+
+<div>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="/db/edtdoc/content/24/hdoc" target="_top">Интерфейс 1C:EDT</a></strong><br>
+</li>
+<li class="ulchildlink"><strong><a href="/db/edtdoc/content/33/hdoc" target="_top">Помощь</a></strong><br>
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>На уровень выше:</strong> <a href="/db/edtdoc/content/314/hdoc" target="_top">Начало работы</a></div>
+</div>
+</div>
+</body></html>

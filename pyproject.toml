@@ -6,13 +6,24 @@ build-backend = "hatchling.build"
 name = "its-parser"
 version = "0.1.0"
 description = "Парсер документации 1С ИТС"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
-    "requests==2.28.2",
+    "requests>=2.28.2",
     "selenium>=4.0.0",
     "python-dotenv>=0.19.0",
     "urllib3>=1.26.0",
     "loguru>=0.7.0",
+]
+
+[project.optional-dependencies]
+rag = [
+    "qdrant-client[fastembed]",
+    "fastmcp",
+    "beautifulsoup4",
+    "markdownify",
+]
+dev = [
+    "pytest",
 ]
 
 [project.scripts]
