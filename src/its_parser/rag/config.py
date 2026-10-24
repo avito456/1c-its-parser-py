@@ -33,7 +33,7 @@ class Settings:
             qdrant_url=env.get("ITS_QDRANT_URL") or None,
             dense_model=env.get("ITS_DENSE_MODEL") or DEFAULT_DENSE_MODEL,
             sparse_model=env.get("ITS_SPARSE_MODEL") or DEFAULT_SPARSE_MODEL,
-            models_cache=Path(cache) if cache else (data_dir / "models" if env.get("ITS_DATA_DIR") else None),
+            models_cache=Path(cache) if cache else data_dir / "models",
         )
 
     @property

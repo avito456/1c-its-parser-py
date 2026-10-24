@@ -9,6 +9,8 @@ from its_parser.rag.extract import PageInfo, extract_page, load_page_info
 
 MAX_CHARS = 1200
 OVERLAP = 150
+MAX_PREFIX_PATH = 300  # длинный путь разделов обрезается слева, чтобы не съедать бюджет чанка
+CHUNKER_VERSION = 2  # входит в хэш страницы: смена алгоритма вызывает переиндексацию
 
 _HEADING_RE = re.compile(r"^(#{1,4})\s+(.*?)\s*#*\s*$")
 _FENCE_RE = re.compile(r"^\s*(```|~~~)")
@@ -108,36 +110,88 @@ def _overlap_tail(text: str, overlap: int) -> str:
 
 def split_body(body: str, max_chars: int = MAX_CHARS, overlap: int = OVERLAP) -> List[str]:
     """Собирает абзацы в куски до max_chars; следующий кусок начинается с хвоста предыдущего"""
+    overlap = min(overlap, max_chars // 4)
     pieces: List[str] = []
     current = ""
-    fresh = True  # в current только перекрытие, своих абзацев ещё нет
-    for para in _paragraphs(body, max_chars - overlap if overlap < max_chars // 2 else max_chars):
+    # абзац + перекрытие + разделитель «\n\n» всегда укладываются в max_chars
+    for para in _paragraphs(body, max_chars - overlap - 2):
         candidate = para if not current else f"{current}\n\n{para}"
-        if len(candidate) <= max_chars or fresh:
+        if len(candidate) <= max_chars:
             current = candidate
-            fresh = False
             continue
         pieces.append(current)
         tail = _overlap_tail(current, overlap)
         current = f"{tail}\n\n{para}" if tail else para
-    if current and not fresh:
+    if current:
         pieces.append(current)
     return pieces
 
 
 def section_path(info: PageInfo, heading: str) -> str:
-    parts = [*info.breadcrumbs, info.title]
-    if heading and heading != info.title:
+    """Крошки > заголовок страницы > подзаголовок; повторы (в т.ч. h1, входящий в заголовок) опускаются"""
+    parts: List[str] = []
+    for part in (*info.breadcrumbs, info.title):
+        if part and (not parts or part != parts[-1]):
+            parts.append(part)
+    if heading and not any(heading.casefold() in p.casefold() for p in parts):
         parts.append(heading)
-    return " > ".join(p for p in parts if p)
+    path = " > ".join(parts)
+    if len(path) > MAX_PREFIX_PATH:
+        tail = path[-MAX_PREFIX_PATH:]
+        # режем по границе уровня, если она есть
+        path = "… > " + tail.split(" > ", 1)[1] if " > " in tail else "…" + tail
+    return path
+
+
+_LINK_RE = re.compile(r"(?<!!)\[([^\]]*)\]\((?:[^()\s]|\([^()]*\))*(?:\s+\"[^\"]*\")?\)")
+_LIST_NOISE = set("-*+0123456789.;,: \n")
+
+
+def _compress_link_blocks(markdown: str) -> str:
+    """Абзацы и списки только из ссылок (оглавления) → «Подразделы: A; B; C»"""
+    blocks: List[str] = []
+    current: List[str] = []
+    in_fence = False
+
+    def close() -> None:
+        if current:
+            blocks.append("\n".join(current))
+            current.clear()
+
+    for line in markdown.split("\n"):
+        if _FENCE_RE.match(line):
+            in_fence = not in_fence
+        if not line.strip() and not in_fence:
+            close()
+            blocks.append("")
+        else:
+            current.append(line)
+    close()
+
+    out = []
+    for block in blocks:
+        links = _LINK_RE.findall(block) if block and "```" not in block else []
+        rest = _LINK_RE.sub("", block)
+        if len(links) >= 2 and set(rest) <= _LIST_NOISE:
+            titles = [" ".join(t.split()) for t in links if t.strip()]
+            block = "Подразделы: " + "; ".join(titles)
+        out.append(block)
+    return "\n".join(out)
+
+
+def prepare_for_index(markdown: str) -> str:
+    """Текст для индекса: оглавления сжимаются, [текст](url) → текст (картинки остаются)"""
+    text = _compress_link_blocks(markdown)
+    text = _LINK_RE.sub(lambda m: " ".join(m.group(1).split()), text)
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
 def chunk_markdown(markdown: str, info: PageInfo, db: str,
                    max_chars: int = MAX_CHARS, overlap: int = OVERLAP) -> List[Chunk]:
     chunks: List[Chunk] = []
-    for heading, body in split_sections(markdown):
+    for heading, body in split_sections(prepare_for_index(markdown)):
         prefix = f"Раздел: {section_path(info, heading)}\n\n"
-        for piece in split_body(body, max_chars, overlap):
+        for piece in split_body(body, max_chars - len(prefix), overlap):
             chunks.append(Chunk(
                 text=prefix + piece,
                 db=db,

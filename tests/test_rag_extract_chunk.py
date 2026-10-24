@@ -3,7 +3,8 @@ from pathlib import Path
 import pytest
 
 from its_parser.rag.chunker import (
-    Chunk, chunk_markdown, chunk_page, split_body, split_sections,
+    MAX_CHARS, Chunk, chunk_markdown, chunk_page, prepare_for_index, section_path, split_body,
+    split_sections,
 )
 from its_parser.rag.config import Settings
 from its_parser.rag.extract import PageInfo, extract_page, html_to_markdown, load_page_info
@@ -104,8 +105,7 @@ def test_chunk_size_limits_and_overlap():
     chunks = chunk_page(page("0003"), db="edtdoc")
     assert len(chunks) > 3
     for c in chunks:
-        body = c.text.split("\n\n", 1)[1]
-        assert len(body) <= 1200
+        assert len(c.text) <= MAX_CHARS  # вместе с префиксом «Раздел: ...»
     long_text = " ".join(f"слово{i}" for i in range(600))
     pieces = split_body(long_text.replace(" ", "\n\n", 1) + "\n\n" + "\n\n".join(
         f"Абзац номер {i}. " + "текст " * 40 for i in range(10)), 1200, 150)
@@ -120,7 +120,54 @@ def test_oversized_code_block_is_split():
     info = PageInfo(page_id="p", title="T")
     chunks = chunk_markdown(f"# T\n\n{code}", info, db="d")
     assert len(chunks) > 1
-    assert all(len(c.text.split("\n\n", 1)[1]) <= 1200 for c in chunks)
+    assert all(len(c.text) <= MAX_CHARS for c in chunks)
+
+
+def test_budget_holds_for_long_prefix_and_big_overlap():
+    info = PageInfo(page_id="p", title="Т" * 200, breadcrumbs=["Раздел " + "К" * 150] * 3)
+    text = "# H\n\n" + "\n\n".join("слово " * 60 for _ in range(30))
+    chunks = chunk_markdown(text, info, db="d")
+    assert len(chunks) > 3
+    assert all(len(c.text) <= MAX_CHARS for c in chunks)
+    assert all(c.text.startswith("Раздел: ") for c in chunks)
+    assert len(chunks[0].text.split("\n\n", 1)[0]) <= 320
+
+
+def test_links_become_plain_text_images_kept():
+    md = "См. [Установка\nEDT](/db/edtdoc/content/1/hdoc) и ![схема](img/a.png), [x](https://a.b/c_(d)) тут."
+    out = prepare_for_index(md)
+    assert out == "См. Установка EDT и ![схема](img/a.png), x тут."
+
+
+def test_link_only_blocks_are_compressed():
+    md = (
+        "# Раздел\n\nВведение.\n\n"
+        "- [Первый](/a)\n- [Второй](/b)\n  - [Вложенный](/c)\n\n"
+        "[Один](/x)\n\n"
+        "[А](/1); [Б](/2)\n\n"
+        "Смесь: [ссылка](/y) и текст\n"
+    )
+    out = prepare_for_index(md)
+    assert "Подразделы: Первый; Второй; Вложенный" in out
+    assert "Подразделы: А; Б" in out
+    assert "\n\nОдин\n\n" in out  # одиночная ссылка — обычный текст
+    assert "Смесь: ссылка и текст" in out
+    assert "(/" not in out
+
+
+def test_toc_page_chunks_have_no_urls():
+    chunks = chunk_page(page("0003"), db="edtdoc")
+    assert not any("](" in c.text and "![" not in c.text for c in chunks)
+
+
+def test_section_path_dedups_root():
+    info = PageInfo(page_id="p", title="1C:Enterprise Development Tools Руководство разработчика")
+    assert section_path(info, "1C:Enterprise Development Tools") == info.title
+    assert section_path(info, "") == info.title
+    info = PageInfo(page_id="p", title="Начало", breadcrumbs=["Начало"])
+    assert section_path(info, "Начало") == "Начало"
+    info = PageInfo(page_id="p", title="Т", breadcrumbs=["А", "Б"])
+    assert section_path(info, "Раздел") == "А > Б > Т > Раздел"
 
 
 def test_settings_defaults_and_prefixes(monkeypatch):
@@ -131,6 +178,7 @@ def test_settings_defaults_and_prefixes(monkeypatch):
     assert s.dense_model == "intfloat/multilingual-e5-large"
     assert s.sparse_model == "Qdrant/bm25"
     assert s.qdrant_path == Path("data/qdrant") and s.qdrant_url is None
+    assert s.models_cache == Path("data/models")
     assert (s.query_prefix, s.passage_prefix) == ("query: ", "passage: ")
     assert s.collection_name("edtdoc") == "its_edtdoc"
 
@@ -139,4 +187,6 @@ def test_settings_defaults_and_prefixes(monkeypatch):
     s = Settings.from_env()
     assert s.qdrant_path == Path("/srv/its/qdrant")
     assert s.models_cache == Path("/srv/its/models")
+    monkeypatch.setenv("ITS_MODELS_CACHE", "/cache")
+    assert Settings.from_env().models_cache == Path("/cache")
     assert s.query_prefix == "" and s.passage_prefix == ""
