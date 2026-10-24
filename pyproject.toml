@@ -29,6 +29,7 @@ dev = [
 [project.scripts]
 its-parser = "its_parser.cli:main"
 its-index = "its_parser.rag.cli:index_main"
+its-mcp = "its_parser.rag.server:mcp_main"
 
 [tool.pytest.ini_options]
 addopts = "-m 'not slow'"

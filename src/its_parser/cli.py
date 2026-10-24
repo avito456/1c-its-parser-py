@@ -63,6 +63,7 @@ def main():
     parser.add_argument('--serve', action='store_true', help='Запустить MCP-сервер после загрузки/индексации')
     parser.add_argument('--transport', choices=['stdio', 'http'], default='stdio',
                         help='Транспорт MCP-сервера для --serve (по умолчанию: stdio)')
+    parser.add_argument('--host', default='127.0.0.1', help='Адрес MCP-сервера для --transport http (по умолчанию: 127.0.0.1)')
     parser.add_argument('--port', type=int, default=8080, help='Порт MCP-сервера для --transport http (по умолчанию: 8080)')
     parser.add_argument('--no-crawl', action='store_true',
                         help='Не загружать документацию (только --index/--serve для готового <out-dir>/<db>)')
@@ -88,15 +89,20 @@ def main():
     if not args.no_crawl:
         crawl(args, db_dir)
 
-    if args.index:
+    if args.index or args.serve:
         try:
-            from its_parser.rag.cli import run_index
             from its_parser.rag.config import Settings
+            settings = replace(Settings.from_env(), out_dir=Path(args.out_dir))
+            if args.index:
+                from its_parser.rag.cli import run_index
+                # run_index закрывает клиент Qdrant: локальное хранилище блокируется одним процессом
+                run_index([db], settings)
+            if args.serve:
+                from its_parser.rag.server import serve
         except ImportError as e:
-            raise SystemExit(f"Для --index нужен extra rag: uv sync --extra rag ({e})")
-        run_index([db], replace(Settings.from_env(), out_dir=Path(args.out_dir)))
-    if args.serve:
-        logger.warning("--serve пока не реализован (этап D), пропускаем")
+            raise SystemExit(f"Для --index/--serve нужен extra rag: uv sync --extra rag ({e})")
+        if args.serve:
+            serve(settings, args.transport, args.host, args.port)
     if args.no_crawl and not (args.index or args.serve):
         logger.warning("--no-crawl без --index/--serve: делать нечего")
 
