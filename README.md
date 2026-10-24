@@ -91,12 +91,15 @@ uv run its-parser --url https://its.1c.ru/db/edtdoc --login https://login.1c.ru/
 uv run its-index --db edtdoc            # одна база (out/edtdoc)
 uv run its-index --all                  # все базы из out/
 uv run its-index --db edtdoc --reindex  # пересоздать коллекцию с нуля
+uv run its-index --prune                # удалить коллекции its_*, для которых нет каталога out/<db>
 
 uv run its-mcp                          # stdio (для Claude Code)
 uv run its-mcp --transport http --port 8080   # streamable-http: http://127.0.0.1:8080/mcp
 ```
 
-Повторный `its-index` пропускает неизменённые страницы. После смены модели
+Повторный `its-index` пропускает неизменённые страницы. `its-index --all` предупреждает о
+«осиротевших» коллекциях (есть `its_<db>`, нет `out/<db>`), `--prune` их удаляет. Если базы
+`out/<db>` нет, команда завершается с ошибкой и подсказкой скачать её. После смены модели
 (`ITS_DENSE_MODEL`) нужен `--reindex`. В stdio-режиме stdout занят протоколом MCP,
 все логи идут в stderr.
 
@@ -104,8 +107,8 @@ uv run its-mcp --transport http --port 8080   # streamable-http: http://127.0.0.
 
 | Инструмент | Назначение |
 |------------|------------|
-| `search_docs(query, db=None, limit=8)` | Поиск: заголовок, хлебные крошки, ссылка на ИТС, `page_id`, `db`, фрагмент |
-| `get_page(db, page_id)` | Полный markdown страницы |
+| `search_docs(query, db=None, limit=8)` | Поиск: заголовок, хлебные крошки, ссылка на ИТС, `cite` для цитирования, `page_id`, `db`, фрагмент; `score` — ранг RRF, не нормирован |
+| `get_page(db, page_id, max_chars=20000)` | Markdown страницы; длинные обрезаются по абзацу (`truncated: true`) |
 | `list_sections(db, prefix=None)` | Оглавление базы; `prefix` — номер раздела (`1.2`) |
 | `list_databases()` | Проиндексированные базы и число страниц/чанков |
 
@@ -113,7 +116,8 @@ uv run its-mcp --transport http --port 8080   # streamable-http: http://127.0.0.
 
 По умолчанию индекс лежит в `data/qdrant` (локальный режим Qdrant). Такой каталог может
 открывать **только один процесс**: пока работает `its-mcp`, запустить `its-index` не выйдет
-(и наоборот). Варианты: остановить сервер на время индексации, использовать
+(и наоборот). Второй процесс получает понятную ошибку («хранилище занято другим процессом», с подсказкой про
+`ITS_QDRANT_URL`). Варианты: остановить сервер на время индексации, использовать
 `its-parser --index --serve` (индексатор закрывается до старта сервера) либо вынести
 Qdrant в отдельный сервер и задать `ITS_QDRANT_URL` — так работает [Docker](#docker).
 
@@ -131,7 +135,10 @@ HTTP (сервер запущен отдельно, например в Docker):
 claude mcp add --transport http its-docs http://localhost:8080/mcp
 ```
 
-У MCP-сервера нет аутентификации, поэтому по умолчанию он слушает только localhost.
+> **Предупреждение.** HTTP-endpoint MCP-сервера не защищён аутентификацией: любой, кто до него
+> дотянется, читает всю документацию. Поэтому `its-mcp` по умолчанию слушает `127.0.0.1`, а в
+> `docker-compose.yml` порт опубликован как `127.0.0.1:8080:8080`. Не открывайте его в сеть без
+> reverse-proxy с авторизацией.
 
 ## Docker
 

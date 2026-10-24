@@ -52,13 +52,25 @@ class FastEmbedder:
         return dense.tolist(), self._sv(sparse)
 
 
+class QdrantLockedError(RuntimeError):
+    """Локальное хранилище Qdrant уже открыто другим процессом"""
+
+
 def make_client(settings: Settings) -> QdrantClient:
     if settings.qdrant_url:
         return QdrantClient(url=settings.qdrant_url)
     path = str(settings.qdrant_path)
     if path != ":memory:":
         settings.qdrant_path.mkdir(parents=True, exist_ok=True)
-    return QdrantClient(path=path)
+    try:
+        return QdrantClient(path=path)
+    except RuntimeError as e:
+        if "already accessed by another instance" not in str(e):
+            raise
+        raise QdrantLockedError(
+            f"Локальное хранилище Qdrant ({path}) занято другим процессом. Закройте его "
+            f"(its-mcp или its-index) либо используйте отдельный сервер: ITS_QDRANT_URL / docker compose"
+        ) from e
 
 
 def ensure_collection(client: QdrantClient, name: str, dense_dim: int) -> None:

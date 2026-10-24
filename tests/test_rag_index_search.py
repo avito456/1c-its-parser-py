@@ -180,3 +180,94 @@ def test_real_models_end_to_end(settings, db_dir, client):
     index_db("edtdoc", small, client, emb)
     hits = search(client, emb, small, "какие нужны процессор и память", db="edtdoc")
     assert hits[0].page_id == "page_0002"
+
+
+def test_find_orphans_and_prune(settings, db_dir, client):
+    from its_parser.rag.cli import find_orphans
+
+    emb = FakeEmbedder()
+    index_db("edtdoc", settings, client, emb)
+    shutil.copytree(db_dir, settings.out_dir / "gone")
+    index_db("gone", settings, client, emb)
+    assert find_orphans(client, settings) == []
+    shutil.rmtree(settings.out_dir / "gone")
+    assert find_orphans(client, settings) == ["gone"]
+
+
+def _patch_cli(monkeypatch, settings, client):
+    import its_parser.rag.cli as rag_cli
+    import its_parser.rag.store as store
+
+    class Wrapped:  # close() не должен закрывать общий клиент теста
+        def __getattr__(self, name):
+            return getattr(client, name)
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(rag_cli, "setup_logging", lambda **kw: None)  # не сбрасывать sink'и теста
+    monkeypatch.setattr(store, "make_client", lambda s: Wrapped())
+    monkeypatch.setattr(store, "FastEmbedder", lambda s: FakeEmbedder())
+    monkeypatch.setattr(rag_cli.Settings, "from_env", classmethod(lambda cls: settings))
+
+
+def test_cli_missing_db_exits_with_error(settings, client, monkeypatch):
+    from loguru import logger
+    from its_parser.rag.cli import index_main
+
+    _patch_cli(monkeypatch, settings, client)
+    settings.out_dir.mkdir()
+    messages = []
+    sink = logger.add(lambda m: messages.append(str(m)), level="ERROR")
+    try:
+        with pytest.raises(SystemExit) as exc:
+            index_main(["--db", "nodb"])
+    finally:
+        logger.remove(sink)
+    assert exc.value.code == 1
+    assert any("Нет загруженной базы 'nodb'" in m for m in messages)
+    assert list_collections(client) == []
+
+
+def test_cli_prune_removes_orphans_all_warns(settings, db_dir, client, monkeypatch):
+    from loguru import logger
+    from its_parser.rag.cli import index_main
+
+    _patch_cli(monkeypatch, settings, client)
+    emb = FakeEmbedder()
+    shutil.copytree(db_dir, settings.out_dir / "gone")
+    index_db("gone", settings, client, emb)
+    shutil.rmtree(settings.out_dir / "gone")
+
+    messages = []
+    sink = logger.add(lambda m: messages.append(str(m)), level="WARNING")
+    try:
+        index_main(["--all"])
+    finally:
+        logger.remove(sink)
+    assert any("its_gone" in m and "осиротела" in m for m in messages)
+    assert list_collections(client) == ["its_edtdoc", "its_gone"]
+
+    index_main(["--prune"])  # без --db/--all: только чистка
+    assert list_collections(client) == ["its_edtdoc"]
+
+
+def test_cli_requires_target(settings, client, monkeypatch):
+    from its_parser.rag.cli import index_main
+
+    _patch_cli(monkeypatch, settings, client)
+    with pytest.raises(SystemExit) as exc:
+        index_main([])
+    assert exc.value.code == 2
+
+
+def test_local_qdrant_lock_gives_clear_error(tmp_path):
+    from its_parser.rag.store import QdrantLockedError, make_client
+
+    s = replace(Settings.from_env(), qdrant_path=tmp_path / "q", qdrant_url=None)
+    first = make_client(s)
+    try:
+        with pytest.raises(QdrantLockedError, match="ITS_QDRANT_URL"):
+            make_client(s)
+    finally:
+        first.close()

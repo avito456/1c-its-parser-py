@@ -68,6 +68,9 @@ def test_search_docs(env):
     assert top["breadcrumbs"] == ["Начало", "Установка, обновление"]
     assert top["title"] == "Системные требования"
     assert not top["fragment"].startswith("Раздел:")
+    assert top["cite"] == "Системные требования (1.2.1.1.) — https://its.1c.ru/db/edtdoc/content/39/hdoc"
+    old = call(env, "search_docs", query="Обзор возможностей плагины", db="edtdoc")
+    assert all(h["cite"].endswith(h["url"]) for h in old)  # номера нет (metadata.txt) — без скобок
     assert len({h["page_id"] for h in hits}) == len(hits)
 
 
@@ -87,6 +90,17 @@ def test_get_page(env):
     assert "](/db/edtdoc" in page["markdown"] or "](https://" in page["markdown"]  # ссылки сохранены
     code = call(env, "get_page", db="edtdoc", page_id="page_0003")
     assert "```\n1ce-installer-cli install\n```" in code["markdown"]
+
+
+def test_get_page_truncation(env):
+    full = call(env, "get_page", db="edtdoc", page_id="page_0002")
+    assert full["truncated"] is False and full["total_chars"] == len(full["markdown"]) > 5000
+    cut = call(env, "get_page", db="edtdoc", page_id="page_0002", max_chars=3000)
+    assert cut["truncated"] is True and cut["total_chars"] == full["total_chars"]
+    assert 2100 <= len(cut["markdown"]) <= 3000
+    assert full["markdown"].startswith(cut["markdown"])
+    tiny = call(env, "get_page", db="edtdoc", page_id="page_0002", max_chars=1)  # нижняя граница 500
+    assert 350 <= len(tiny["markdown"]) <= 500 and tiny["truncated"] is True
 
 
 @pytest.mark.parametrize("db,page_id", [

@@ -19,11 +19,12 @@ from its_parser.rag.config import Settings
 from its_parser.rag.extract import extract_page, load_page_info
 from its_parser.rag.indexer import find_pages
 from its_parser.rag.search import search
-from its_parser.rag.store import COLLECTION_PREFIX, Embedder, list_collections, make_client
+from its_parser.rag.store import COLLECTION_PREFIX, Embedder, QdrantLockedError, list_collections, make_client
 
 _DB_RE = re.compile(r"[A-Za-z0-9_-]+")
 _PAGE_RE = re.compile(r"page_\d{1,8}")
 MAX_LIMIT = 20
+DEFAULT_PAGE_CHARS = 20000
 
 INSTRUCTIONS = (
     "Поиск по документации 1С:Предприятие / 1C:EDT с портала ИТС (its.1c.ru). "
@@ -59,6 +60,22 @@ def _fragment(text: str) -> str:
     return rest if sep and head.startswith("Раздел: ") else text
 
 
+def _cite(title: str, number: str, url: str) -> str:
+    return f"{title} ({number}) — {url}" if number else f"{title} — {url}"
+
+
+def _truncate(text: str, max_chars: int) -> str:
+    """Обрезает по границе абзаца (если она не слишком далеко), иначе по границе слова"""
+    if len(text) <= max_chars:
+        return text
+    cut = text[:max_chars]
+    for sep in ("\n\n", "\n", " "):
+        pos = cut.rfind(sep)
+        if pos >= max_chars * 0.7:
+            return cut[:pos].rstrip()
+    return cut
+
+
 class _Backend:
     """Клиент Qdrant и модели эмбеддингов создаются при первом обращении и один раз"""
 
@@ -72,7 +89,10 @@ class _Backend:
     def client(self) -> QdrantClient:
         with self._lock:
             if self._client is None:
-                self._client = make_client(self.settings)
+                try:
+                    self._client = make_client(self.settings)
+                except QdrantLockedError as e:
+                    raise ToolError(str(e))
             return self._client
 
     @property
@@ -112,7 +132,10 @@ def create_server(
         Возвращает список фрагментов по убыванию релевантности. Поля: title (заголовок
         страницы), breadcrumbs (путь по оглавлению), number (номер в оглавлении),
         heading (раздел внутри страницы), fragment (текст фрагмента), url (ссылка на
-        страницу в ИТС), page_id и db (для get_page), score.
+        страницу в ИТС), cite (готовая строка для цитирования «Заголовок (номер) — url»),
+        page_id и db (для get_page), score. score — ранг слияния RRF: служит только для
+        сортировки внутри одной выдачи, не нормирован и не является вероятностью;
+        сравнивать score разных запросов нельзя.
         """
         if not query or not query.strip():
             raise ToolError("Пустой поисковый запрос")
@@ -132,6 +155,7 @@ def create_server(
                 "heading": h.heading,
                 "fragment": _fragment(h.text),
                 "url": h.url,
+                "cite": _cite(h.title, h.number, h.url),
                 "page_id": h.page_id,
                 "db": h.db,
                 "score": round(h.score, 4),
@@ -140,7 +164,7 @@ def create_server(
         ]
 
     @mcp.tool
-    def get_page(db: str, page_id: str) -> Dict[str, Any]:
+    def get_page(db: str, page_id: str, max_chars: int = DEFAULT_PAGE_CHARS) -> Dict[str, Any]:
         """Возвращает полный текст страницы документации в формате markdown.
 
         Используй после search_docs, когда фрагмента недостаточно: передай db и page_id
@@ -150,11 +174,17 @@ def create_server(
         Аргументы:
             db: имя базы ИТС, например "edtdoc".
             page_id: идентификатор страницы вида "page_0042".
+            max_chars: максимум символов markdown в ответе (по умолчанию 20000, можно
+                от 500 до 200000). Длинная страница обрезается по границе абзаца.
 
-        Возвращает: db, page_id, title, number, breadcrumbs, url (страница в ИТС), markdown.
+        Возвращает: db, page_id, title, number, breadcrumbs, url (страница в ИТС), markdown,
+        truncated (true, если текст обрезан), total_chars (длина полного текста).
+        Если truncated, нужный раздел можно найти через search_docs или открыть по url.
         """
         path = _page_dir(settings, db, page_id)
         info = load_page_info(path)
+        max_chars = max(500, min(int(max_chars), 200000))
+        markdown = extract_page(path)
         return {
             "db": db,
             "page_id": page_id,
@@ -162,7 +192,9 @@ def create_server(
             "number": info.number,
             "breadcrumbs": info.breadcrumbs,
             "url": info.url,
-            "markdown": extract_page(path),
+            "markdown": _truncate(markdown, max_chars),
+            "truncated": len(markdown) > max_chars,
+            "total_chars": len(markdown),
         }
 
     @mcp.tool
