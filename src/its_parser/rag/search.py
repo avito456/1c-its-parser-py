@@ -55,7 +55,7 @@ def search(
     if db:
         collections = [settings.collection_name(db)]
         if not client.collection_exists(collections[0]):
-            raise ValueError(f"База '{db}' не проиндексирована")
+            raise ValueError(f"База '{db}' не найдена: нет индекса")
     else:
         collections = list_collections(client)
 

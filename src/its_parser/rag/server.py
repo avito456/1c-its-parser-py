@@ -22,7 +22,7 @@ from its_parser.rag.search import search
 from its_parser.rag.store import COLLECTION_PREFIX, Embedder, QdrantLockedError, list_collections, make_client
 
 _DB_RE = re.compile(r"[A-Za-z0-9_-]+")
-_PAGE_RE = re.compile(r"page_\d{1,8}")
+_PAGE_RE = re.compile(r"page_\d{4,8}")
 MAX_LIMIT = 20
 DEFAULT_PAGE_CHARS = 20000
 
@@ -40,12 +40,20 @@ def _check_db(db: str) -> str:
     return db
 
 
+def _require_db(settings: Settings, db: str) -> Path:
+    """Проверяет имя базы и наличие в ней страниц; возвращает out/<db>."""
+    _check_db(db)
+    db_dir = settings.db_dir(db)
+    if not db_dir.is_dir() or not find_pages(db_dir):
+        raise ToolError(f"База '{db}' не найдена в {settings.out_dir}")
+    return db_dir
+
+
 def _page_dir(settings: Settings, db: str, page_id: str) -> Path:
     """out/<db>/<page_id> с защитой от path traversal"""
-    _check_db(db)
+    root = _require_db(settings, db).resolve()
     if not isinstance(page_id, str) or not _PAGE_RE.fullmatch(page_id):
         raise ToolError(f"Недопустимый page_id: {page_id!r} (ожидается вид page_0001)")
-    root = settings.db_dir(db).resolve()
     path = (root / page_id).resolve()
     if path.parent != root:
         raise ToolError(f"Недопустимый page_id: {page_id!r}")
@@ -141,7 +149,12 @@ def create_server(
         if not query or not query.strip():
             raise ToolError("Пустой поисковый запрос")
         if db is not None:
-            _check_db(db)
+            # пустая строка из UI означает «все базы», а не ошибку имени
+            db = db.strip() if isinstance(db, str) else db
+            if db:
+                _check_db(db)
+            else:
+                db = None
         limit = max(1, min(int(limit), MAX_LIMIT))
         try:
             with backend._lock:
@@ -214,11 +227,7 @@ def create_server(
         Возвращает список в порядке оглавления: number, title, level (глубина, с 0),
         page_id (для get_page), url.
         """
-        _check_db(db)
-        db_dir = settings.db_dir(db)
-        pages = find_pages(db_dir) if db_dir.is_dir() else []
-        if not pages:
-            raise ToolError(f"База '{db}' не найдена в {settings.out_dir}")
+        pages = find_pages(_require_db(settings, db))
         norm = None
         if prefix:
             norm = prefix.strip().rstrip(".") + "."

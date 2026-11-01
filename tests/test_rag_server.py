@@ -79,7 +79,9 @@ def test_search_docs_limit_and_validation(env):
     assert len(call(env, "search_docs", query="EDT", limit=1000)) <= 20
     assert "Пустой" in call_error(env, "search_docs", query="  ")
     assert "Недопустимое" in call_error(env, "search_docs", query="x", db="../etc")
-    assert "не проиндексирована" in call_error(env, "search_docs", query="x", db="nope")
+    assert "не найдена" in call_error(env, "search_docs", query="x", db="nope")
+    # пустое имя базы из UI означает поиск по всем базам
+    assert call(env, "search_docs", query="EDT", db="") == call(env, "search_docs", query="EDT")
 
 
 def test_get_page(env):
@@ -127,7 +129,12 @@ def test_get_page_symlink_escape(env, tmp_path):
 
 def test_get_page_not_found(env):
     assert "не найдена" in call_error(env, "get_page", db="edtdoc", page_id="page_0777")
-    assert "не найдена" in call_error(env, "get_page", db="other", page_id="page_0001")
+    # неизвестная база диагностируется как база, а не как страница
+    assert "База 'other' не найдена" in call_error(env, "get_page", db="other", page_id="page_0001")
+
+
+def test_get_page_rejects_incomplete_id(env):
+    assert "Недопустимый page_id" in call_error(env, "get_page", db="edtdoc", page_id="page_1")
 
 
 def test_list_sections(env):
